@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.mehvahdjukaar.complementaries.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+  ],
+  "mixins": [
+    "AquiferAccessor",
+    "AquiferMixin",
+    "NoiseChunkMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

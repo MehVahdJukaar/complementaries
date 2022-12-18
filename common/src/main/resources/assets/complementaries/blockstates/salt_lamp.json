@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "power=0": {
+      "model": "complementaries:block/salt_lamp_0"
+    },
+    "power=1": {
+      "model": "complementaries:block/salt_lamp_1"
+    },
+    "power=2": {
+      "model": "complementaries:block/salt_lamp_2"
+    },
+    "power=3": {
+      "model": "complementaries:block/salt_lamp_3"
+    },
+    "power=4": {
+      "model": "complementaries:block/salt_lamp_4"
+    },
+    "power=5": {
+      "model": "complementaries:block/salt_lamp_5"
+    },
+    "power=6": {
+      "model": "complementaries:block/salt_lamp_6"
+    },
+    "power=7": {
+      "model": "complementaries:block/salt_lamp_7"
+    },
+    "power=8": {
+      "model": "complementaries:block/salt_lamp_8"
+    },
+    "power=9": {
+      "model": "complementaries:block/salt_lamp_9"
+    },
+    "power=10": {
+      "model": "complementaries:block/salt_lamp_10"
+    },
+    "power=11": {
+      "model": "complementaries:block/salt_lamp_11"
+    },
+    "power=12": {
+      "model": "complementaries:block/salt_lamp_12"
+    },
+    "power=13": {
+      "model": "complementaries:block/salt_lamp_13"
+    },
+    "power=14": {
+      "model": "complementaries:block/salt_lamp_14"
+    },
+    "power=15": {
+      "model": "complementaries:block/salt_lamp_15"
+    }
+  }
+}

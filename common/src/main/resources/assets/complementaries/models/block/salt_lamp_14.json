@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "complementaries:block/salt_lamp_brown"
+  }
+}

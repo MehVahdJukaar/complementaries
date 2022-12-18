@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "complementaries:block/halite",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "complementaries:block/halite"
+    },
+    "axis=z": {
+      "model": "complementaries:block/halite",
+      "x": 90
+    }
+  }
+}

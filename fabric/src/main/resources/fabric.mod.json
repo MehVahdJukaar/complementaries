@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "carpeted",
+  "version": "${version}",
+  "name": "Carpeted",
+  "description": "Carpet Stairs",
+  "authors": [
+    "Mehvahdjukaar"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/carpeted",
+    "sources": "https://github.com/MehVahdJukaar/carpeted"
+  },
+  "license": "ARR",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.mehvahdjukaar.carpeted.fabric.CarpetedFabric"
+    ]
+  },
+  "mixins": [
+    "${mod_id}.mixins.json",
+    "${mod_id}-common.mixins.json"
+  ],
+  "depends": {
+    "fabric": "*",
+    "minecraft": ">=1.19.2",
+    "moonlight": ">=1.19.2-2.0.35"
+  }
+}
