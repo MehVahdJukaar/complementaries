@@ -33,6 +33,8 @@ dependencies {
     }
 
     modImplementation ("net.mehvahdjukaar:moonlight-fabric:${project.moonlight_version}")
+    modImplementation("com.github.glitchfiend:TerraBlender-fabric:${terrablender_version}")
+
 }
 
 

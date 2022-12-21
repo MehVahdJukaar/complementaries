@@ -106,4 +106,6 @@ dependencies {
     modImplementation ("curse.maven:jei-238222:3884337")
     modImplementation ("curse.maven:spark-361579:4029757")
     modImplementation ("curse.maven:configured-457570:4011355")
+    modImplementation("com.github.glitchfiend:TerraBlender-forge:${terrablender_version}")
+
 }

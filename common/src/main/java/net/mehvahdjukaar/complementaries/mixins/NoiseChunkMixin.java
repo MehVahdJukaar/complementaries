@@ -1,52 +1,60 @@
 package net.mehvahdjukaar.complementaries.mixins;
 
-import net.mehvahdjukaar.complementaries.Complementaries;
-import net.mehvahdjukaar.complementaries.ComplementariesClient;
 import net.mehvahdjukaar.complementaries.common.worldgen.NC;
 import net.mehvahdjukaar.complementaries.common.worldgen.Saltifer;
-import net.minecraft.core.QuartPos;
-import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.levelgen.*;
-import net.minecraft.world.level.levelgen.blending.Blender;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import terrablender.core.TerraBlender;
+import terrablender.core.TerraBlenderForge;
 
-import java.util.ArrayList;
+import javax.annotation.Nullable;
 import java.util.List;
 
 @Mixin(NoiseChunk.class)
-public class NoiseChunkMixin implements NC {
+public abstract class NoiseChunkMixin implements NC {
 
 
-    @Shadow @Final
+    @Shadow
+    @Final
     int firstNoiseX;
-    @Shadow @Final
+    @Shadow
+    @Final
     int firstNoiseZ;
-    @Shadow @Final private Aquifer aquifer;
-    @Shadow @Final private NoiseSettings noiseSettings;
+    @Shadow
+    @Final
+    private Aquifer aquifer;
+    @Shadow
+    @Final
+    private NoiseSettings noiseSettings;
+
+    @Shadow protected abstract Climate.Sampler cachedClimateSampler(NoiseRouter noiseRouter, List<Climate.ParameterPoint> points);
+
     @Unique
+    @Nullable
     private Saltifer saltifer;
 
-    @ModifyArg(method = "<init>", at=@At(target = "Lnet/minecraft/world/level/levelgen/material/MaterialRuleList;<init>(Ljava/util/List;)V",
-            value = "INVOKE"))
-    public List<NoiseChunk.BlockStateFiller> bb(List<NoiseChunk.BlockStateFiller> old){
-
-        this.saltifer  = Saltifer.create(((NoiseChunk) (Object)this),(AquiferAccessor)this.aquifer,
-                this.noiseSettings.minY(), this.noiseSettings.height());
-
-     return   old;
+    public void setSaltifer(Saltifer saltifer) {
+        this.saltifer = saltifer;
     }
 
+    @Nullable
     @Override
     public Saltifer getSaltifer() {
+
         return saltifer;
+    }
+
+    @ModifyArg(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/levelgen/Aquifer;create(Lnet/minecraft/world/level/levelgen/NoiseChunk;Lnet/minecraft/world/level/ChunkPos;Lnet/minecraft/world/level/levelgen/NoiseRouter;Lnet/minecraft/world/level/levelgen/PositionalRandomFactory;IILnet/minecraft/world/level/levelgen/Aquifer$FluidPicker;)Lnet/minecraft/world/level/levelgen/Aquifer;"))
+    private NoiseChunk createSaltifer(NoiseChunk chunk, ChunkPos chunkPos, NoiseRouter noiseRouter, PositionalRandomFactory positionalRandomFactory, int minY, int height, Aquifer.FluidPicker globalFluidPicker) {
+        Saltifer saltifer = new Saltifer(chunk, chunkPos, noiseRouter, positionalRandomFactory, minY, height, globalFluidPicker);
+        this.setSaltifer(saltifer);
+        return chunk;
     }
 }

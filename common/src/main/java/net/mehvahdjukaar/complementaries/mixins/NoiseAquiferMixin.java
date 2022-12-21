@@ -1,27 +1,20 @@
 package net.mehvahdjukaar.complementaries.mixins;
 
 import net.mehvahdjukaar.complementaries.common.worldgen.NC;
-import net.mehvahdjukaar.complementaries.common.worldgen.Saltifer;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Aquifer;
 import net.minecraft.world.level.levelgen.DensityFunction;
 import net.minecraft.world.level.levelgen.NoiseChunk;
-import net.minecraft.world.level.levelgen.PositionalRandomFactory;
-import org.apache.commons.lang3.mutable.MutableDouble;
-import org.checkerframework.checker.units.qual.A;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import terrablender.api.Region;
 
 @Mixin(Aquifer.NoiseBasedAquifer.class)
-public abstract class AquiferMixin {
+public abstract class NoiseAquiferMixin {
 
     @Shadow private boolean shouldScheduleFluidUpdate;
 
@@ -37,8 +30,9 @@ public abstract class AquiferMixin {
 
     @Inject(method = "computeSubstance", at = @At("HEAD"), cancellable = true)
     public void aa(DensityFunction.FunctionContext context, double substance, CallbackInfoReturnable<BlockState> cir){
-
-        cir.setReturnValue(((NC)  this.noiseChunk).getSaltifer().computeSubstance(context, substance));
+        var s = ((NC)  this.noiseChunk).getSaltifer();
+        if(s != null) cir.setReturnValue(s.computeSubstance(context, substance));
     }
+
 
 }

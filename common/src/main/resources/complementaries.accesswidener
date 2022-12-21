@@ -1,1 +1,5 @@
 accessWidener v2  named
+
+
+accessible field net/minecraft/world/level/levelgen/Aquifer$FluidStatus fluidLevel I
+accessible field net/minecraft/world/level/levelgen/Aquifer$FluidStatus fluidType Lnet/minecraft/world/level/block/state/BlockState;

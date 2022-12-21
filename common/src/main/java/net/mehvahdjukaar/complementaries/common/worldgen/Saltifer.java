@@ -1,11 +1,14 @@
 package net.mehvahdjukaar.complementaries.common.worldgen;
 
 
-import net.mehvahdjukaar.complementaries.mixins.AquiferAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.biome.Climate;
+import net.minecraft.world.level.biome.MultiNoiseBiomeSource;
 import net.minecraft.world.level.biome.OverworldBiomeBuilder;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,17 +27,7 @@ import java.util.Arrays;
  * At each point, the grid cell containing that point is calculated, and then of the eight grid corners, the three closest aquifers are found, by square euclidean distance.
  * Borders between aquifers are created by comparing nearby aquifers to see if the given point is near-equidistant from them, indicating a border if so, or fluid/air depending on the aquifer height if not.
  */
-public class Saltifer {
-    private boolean shouldScheduleFluidUpdate;
-
-    /**
-     * Creates a standard noise based aquifer. This aquifer will place liquid (both water and lava), air, and stone as described above.
-     */
-    public static Saltifer create(NoiseChunk chunk, AquiferAccessor noiseRouter,
-                                  int minY, int height) {
-        return new Saltifer(chunk, noiseRouter, minY, height);
-    }
-
+public class Saltifer implements Aquifer {
     private static final int X_RANGE = 10;
     private static final int Y_RANGE = 9;
     private static final int Z_RANGE = 10;
@@ -52,46 +45,59 @@ public class Saltifer {
     private final DensityFunction fluidLevelSpreadNoise;
     private final DensityFunction lavaNoise;
     private final PositionalRandomFactory positionalRandomFactory;
-    private final FluidStatus[] aquiferCache;
+    private final Aquifer.FluidStatus[] aquiferCache;
     private final long[] aquiferLocationCache;
+    private final Aquifer.FluidPicker globalFluidPicker;
     private final DensityFunction erosion;
     private final DensityFunction depth;
+    private final NoiseRouter noiseRouter;
+    private boolean shouldScheduleFluidUpdate;
     private final int minGridX;
     private final int minGridY;
     private final int minGridZ;
     private final int gridSizeX;
     private final int gridSizeZ;
-    private static final int[][] SURFACE_SAMPLING_OFFSETS_IN_CHUNKS = new int[][]{{-2, -1}, {-1, -1}, {0, -1}, {1, -1}, {-3, 0}, {-2, 0}, {-1, 0}, {0, 0}, {1, 0}, {-2, 1}, {-1, 1}, {0, 1}, {1, 1}};
-    FluidStatus gfs = new FluidStatus(-50, Blocks.LAVA.defaultBlockState());
+    private static final int[][] SURFACE_SAMPLING_OFFSETS_IN_CHUNKS = new int[][]{
+            {-2, -1}, {-1, -1}, {0, -1}, {1, -1}, {-3, 0}, {-2, 0}, {-1, 0}, {0, 0}, {1, 0}, {-2, 1}, {-1, 1}, {0, 1}, {1, 1}
+    };
+    private MultiNoiseBiomeSource biomeSource;
+    private int  MAX_AQUIFER_H_FROM_GROUND = 8;
 
-    Saltifer(NoiseChunk noiseChunk, AquiferAccessor aquifer,
-             int minY, int height) {
+    public Saltifer(
+            NoiseChunk noiseChunk,
+            ChunkPos chunkPos,
+            NoiseRouter noiseRouter,
+            PositionalRandomFactory positionalRandomFactory,
+            int i,
+            int j,
+            Aquifer.FluidPicker fluidPicker
+    ) {
         this.noiseChunk = noiseChunk;
-        this.barrierNoise = aquifer.getBarrierNoise();
-        this.fluidLevelFloodednessNoise = aquifer.getFluidLevelFloodednessNoise();
-        this.fluidLevelSpreadNoise = aquifer.getFluidLevelSpreadNoise();
-        this.lavaNoise = aquifer.getLavaNoise();
-        this.erosion = aquifer.getErosion();
-        this.depth = aquifer.getDepth();
-        this.positionalRandomFactory = aquifer.getPositionalRandomFactory();
-        this.minGridX = aquifer.minGridX();
-
-        this.gridSizeX = aquifer.gridSizeX();
-        this.minGridY = this.gridY(minY) - 1;
-        int l = this.gridY(minY + height) + 1;
+        this.noiseRouter = noiseRouter;
+        this.barrierNoise = noiseRouter.barrierNoise();
+        this.fluidLevelFloodednessNoise = noiseRouter.fluidLevelFloodednessNoise();
+        this.fluidLevelSpreadNoise = noiseRouter.fluidLevelSpreadNoise();
+        this.lavaNoise = noiseRouter.lavaNoise();
+        this.erosion = noiseRouter.erosion();
+        this.depth = noiseRouter.depth();
+        this.positionalRandomFactory = positionalRandomFactory;
+        this.minGridX = this.gridX(chunkPos.getMinBlockX()) - 1;
+        this.globalFluidPicker = (a, b, c) -> fluidPicker.computeFluid(a, 64, c);
+        int k = this.gridX(chunkPos.getMaxBlockX()) + 1;
+        this.gridSizeX = k - this.minGridX + 1;
+        this.minGridY = this.gridY(i) - 1;
+        int l = this.gridY(i + j) + 1;
         int m = l - this.minGridY + 1;
-        this.minGridZ = aquifer.minGridZ();
-        this.gridSizeZ = aquifer.gridSizeZ();
+        this.minGridZ = this.gridZ(chunkPos.getMinBlockZ()) - 1;
+        int n = this.gridZ(chunkPos.getMaxBlockZ()) + 1;
+        this.gridSizeZ = n - this.minGridZ + 1;
         int o = this.gridSizeX * m * this.gridSizeZ;
-        this.aquiferCache = new FluidStatus[o];
+        this.aquiferCache = new Aquifer.FluidStatus[o];
         this.aquiferLocationCache = new long[o];
         Arrays.fill(this.aquiferLocationCache, Long.MAX_VALUE);
     }
 
-    /**
-     * @return A cache index based on grid positions.
-     */
-    private int getIndex(int gridX, int gridY, int gridZ) {
+    private int getAqIndex(int gridX, int gridY, int gridZ) {
         int i = gridX - this.minGridX;
         int j = gridY - this.minGridY;
         int k = gridZ - this.minGridZ;
@@ -99,104 +105,109 @@ public class Saltifer {
     }
 
     @Nullable
+    @Override
     public BlockState computeSubstance(DensityFunction.FunctionContext context, double substance) {
-        Aquifer.FluidStatus fluidStatus = new Aquifer.FluidStatus(-54, Blocks.LAVA.defaultBlockState());
-        Aquifer.FluidStatus fluidStatus2 = new Aquifer.FluidStatus(64, Blocks.WATER.defaultBlockState());
-        FluidPicker fp = (j, k, l) -> k < Math.min(-54, 64) ? fluidStatus : fluidStatus2;
         int blockX = context.blockX();
         int blockY = context.blockY();
         int blockZ = context.blockZ();
-
-        if (substance > 0.0) return null;
-        int fX = Math.floorDiv(blockX - 5, 16);
-        int fY = Math.floorDiv(blockY + 1, 12);
-        int fZ = Math.floorDiv(blockZ - 5, 16);
-        int o = Integer.MAX_VALUE;
-        int p = Integer.MAX_VALUE;
-        int q = Integer.MAX_VALUE;
-        long r = 0L;
-        long s = 0L;
-        long t = 0L;
-
-        for (int u = 0; u <= 1; ++u) {
-            for (int v = -1; v <= 1; ++v) {
-                for (int w = 0; w <= 1; ++w) {
-                    int x = fX + u;
-                    int y = fY + v;
-                    int z = fZ + w;
-                    int aa = this.getIndex(x, y, z);
-                    long ab = this.aquiferLocationCache[aa];
-                    long ac;
-                    if (ab != Long.MAX_VALUE) {
-                        ac = ab;
-                    } else {
-                        RandomSource randomSource = this.positionalRandomFactory.at(x, y, z);
-                        ac = BlockPos.asLong(x * 16 + randomSource.nextInt(10), y * 12 + randomSource.nextInt(9), z * 16 + randomSource.nextInt(10));
-                        this.aquiferLocationCache[aa] = ac;
-                    }
-
-                    int ad = BlockPos.getX(ac) - blockX;
-                    int ae = BlockPos.getY(ac) - blockY;
-                    int af = BlockPos.getZ(ac) - blockZ;
-                    int ag = ad * ad + ae * ae + af * af;
-                    if (o >= ag) {
-                        t = s;
-                        s = r;
-                        r = ac;
-                        q = p;
-                        p = o;
-                        o = ag;
-                    } else if (p >= ag) {
-                        t = s;
-                        s = ac;
-                        q = p;
-                        p = ag;
-                    } else if (q >= ag) {
-                        t = ac;
-                        q = ag;
-                    }
-                }
-            }
-        }
-
-        FluidStatus fluidStatus2 = this.getAquiferStatus(r);
-        double d = similarity(o, p);
-        BlockState blockState = fluidStatus2.at(blockY);
-        if (d <= 0.0) {
-            this.shouldScheduleFluidUpdate = d >= FLOWING_UPDATE_SIMULARITY;
-            return blockState;
+        if (substance > 0.0) { //greater than 0 means theres terrain there. we only use negative substance
+            this.shouldScheduleFluidUpdate = false;
+            return null;
         } else {
-            MutableDouble mutableDouble = new MutableDouble(Double.NaN);
-            FluidStatus fluidStatus3 = this.getAquiferStatus(s);
-            double e = d * this.calculatePressure(context, mutableDouble, fluidStatus2, fluidStatus3);
-            if (substance + e > 0.0) {
-                this.shouldScheduleFluidUpdate = false;
-                return null;
+            int aqGridX = gridX(blockX - 5);
+            int aqGridY = gridY(blockY + 1);
+            int aqGridZ = gridZ(blockZ - 5);
+            int firstDist = Integer.MAX_VALUE;
+            int secondDist = Integer.MAX_VALUE;
+            int thirdDist = Integer.MAX_VALUE;
+            long firstSelected = 0L; // the one that contains me
+            long secondSelected = 0L;
+            long thirdSelected = 0L;
+
+            for (int dx = 0; dx <= 1; ++dx) {
+                for (int dy = -1; dy <= 1; ++dy) {
+                    for (int dz = 0; dz <= 1; ++dz) {
+                        int selectedAqGridX = aqGridX + dx;
+                        int selectedAqGridY = aqGridY + dy;
+                        int selectedAqGridZ = aqGridZ + dz;
+                        int aqIndex = this.getAqIndex(selectedAqGridX, selectedAqGridY, selectedAqGridZ);
+                        long aqCenterPacked = this.aquiferLocationCache[aqIndex];
+                        if (aqCenterPacked == Long.MAX_VALUE) {
+                            RandomSource randomSource = this.positionalRandomFactory.at(selectedAqGridX, selectedAqGridY, selectedAqGridZ);
+                            aqCenterPacked = BlockPos.asLong(
+                                    selectedAqGridX * X_SPACING + randomSource.nextInt(X_RANGE),
+                                    selectedAqGridY * Y_SPACING + randomSource.nextInt(Y_RANGE),
+                                    selectedAqGridZ * Z_SPACING + randomSource.nextInt(Z_RANGE));
+                            this.aquiferLocationCache[aqIndex] = aqCenterPacked;
+                        }
+
+                        int distanceX = BlockPos.getX(aqCenterPacked) - blockX;
+                        int distanceY = BlockPos.getY(aqCenterPacked) - blockY;
+                        int distanceZ = BlockPos.getZ(aqCenterPacked) - blockZ;
+                        int distanceSqr = distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ;
+                        if (firstDist >= distanceSqr) {
+                            thirdSelected = secondSelected;
+                            secondSelected = firstSelected;
+                            firstSelected = aqCenterPacked;
+                            thirdDist = secondDist;
+                            secondDist = firstDist;
+                            firstDist = distanceSqr;
+                        } else if (secondDist >= distanceSqr) {
+                            thirdSelected = secondSelected;
+                            secondSelected = aqCenterPacked;
+                            thirdDist = secondDist;
+                            secondDist = distanceSqr;
+                        } else if (thirdDist >= distanceSqr) {
+                            thirdSelected = aqCenterPacked;
+                            thirdDist = distanceSqr;
+                        }
+                    }
+                }
+            }
+
+            Aquifer.FluidStatus firstStatus = this.getAquiferStatus(firstSelected, substance);
+            double similarity = similarity(firstDist, secondDist, firstSelected, secondSelected);
+            BlockState firstFluid = firstStatus.at(blockY);
+            if (similarity <= 0.0) { //too far away
+                this.shouldScheduleFluidUpdate = similarity >= FLOWING_UPDATE_SIMULARITY;
+                return firstFluid;
             } else {
-                FluidStatus fluidStatus4 = this.getAquiferStatus(t);
-                double f = similarity(o, q);
-                double g;
-                if (f > 0.0) {
-                    g = d * f * this.calculatePressure(context, mutableDouble, fluidStatus2, fluidStatus4);
-                    if (substance + g > 0.0) {
-                        this.shouldScheduleFluidUpdate = false;
-                        return null;
+                MutableDouble mutableDouble = new MutableDouble(Double.NaN);
+                Aquifer.FluidStatus secondStatus = this.getAquiferStatus(secondSelected, substance);
+                double e = similarity * this.calculatePressure(context, mutableDouble, firstStatus, secondStatus);
+                if (substance + e > 0.0) {
+                    this.shouldScheduleFluidUpdate = false;
+                    return Blocks.GLOWSTONE.defaultBlockState(); //makes a barrier block when 2 are distant enough
+                } else {
+                    Aquifer.FluidStatus thirdStatus = this.getAquiferStatus(thirdSelected, substance);
+                    double thirdSimilarity = similarity(firstDist, thirdDist);
+                    if (thirdSimilarity > 0.0) { //if similar
+                        double g = similarity * thirdSimilarity * this.calculatePressure(context, mutableDouble, firstStatus, thirdStatus);
+                        if (substance + g > 0.0) {
+                            this.shouldScheduleFluidUpdate = false;
+                            return Blocks.EMERALD_BLOCK.defaultBlockState();
+                        }
                     }
-                }
 
-                g = similarity(p, q);
-                if (g > 0.0) {
-                    double h = d * g * this.calculatePressure(context, mutableDouble, fluidStatus3, fluidStatus4);
-                    if (substance + h > 0.0) {
-                        this.shouldScheduleFluidUpdate = false;
-                        return null;
+                    double g = similarity(secondDist, thirdDist);
+                    if (g > 0.0) {
+                        double h = similarity * g * this.calculatePressure(context, mutableDouble, secondStatus, thirdStatus);
+                        if (substance + h > 0.0) {
+                            this.shouldScheduleFluidUpdate = false;
+                            return Blocks.REDSTONE_BLOCK.defaultBlockState();
+                        }
                     }
-                }
 
-                this.shouldScheduleFluidUpdate = true;
-                return blockState;
+                    this.shouldScheduleFluidUpdate = true;
+                    return firstFluid;
+                }
             }
         }
+    }
+
+    @Override
+    public boolean shouldScheduleFluidUpdate() {
+        return this.shouldScheduleFluidUpdate;
     }
 
     /**
@@ -204,12 +215,23 @@ public class Saltifer {
      *
      * @return {@code 1.0} if the distances are equal, and returns smaller values the more different in absolute value the two distances are.
      */
+    private double similarity(int firstDistance, int secondDistance, long firstPos, long secondPos) {
+        double old = similarity(firstDistance, secondDistance);
+        if (old > 0) {
+           boolean f = isTargetBiome(BlockPos.getX(firstPos), BlockPos.getY(firstPos), BlockPos.getZ(firstPos));
+         boolean s =isTargetBiome(BlockPos.getX(secondPos), BlockPos.getY(secondPos), BlockPos.getZ(secondPos));
+         if(s || f)return 1;
+
+        }
+        return old;
+    }
+
     private static double similarity(int firstDistance, int secondDistance) {
         double d = 25.0;
         return 1.0 - (double) Math.abs(secondDistance - firstDistance) / 25.0;
     }
 
-    private double calculatePressure(DensityFunction.FunctionContext context, MutableDouble substance, FluidStatus firstFluid, FluidStatus secondFluid) {
+    private double calculatePressure(DensityFunction.FunctionContext context, MutableDouble substance, Aquifer.FluidStatus firstFluid, Aquifer.FluidStatus secondFluid) {
         int i = context.blockY();
         BlockState blockState = firstFluid.at(i);
         BlockState blockState2 = secondFluid.at(i);
@@ -229,16 +251,15 @@ public class Saltifer {
                 double n = 3.0;
                 double o = f - Math.abs(e);
                 double q;
-                double p;
                 if (e > 0.0) {
-                    p = 0.0 + o;
+                    double p = 0.0 + o;
                     if (p > 0.0) {
                         q = p / 1.5;
                     } else {
                         q = p / 2.5;
                     }
                 } else {
-                    p = 3.0 + o;
+                    double p = 3.0 + o;
                     if (p > 0.0) {
                         q = p / 3.0;
                     } else {
@@ -246,7 +267,7 @@ public class Saltifer {
                     }
                 }
 
-                p = 2.0;
+                double p = 2.0;
                 double r;
                 if (!(q < -2.0) && !(q > 2.0)) {
                     double s = substance.getValue();
@@ -269,93 +290,88 @@ public class Saltifer {
     }
 
     private int gridX(int x) {
-        return Math.floorDiv(x, 16);
+        return Math.floorDiv(x, X_SPACING);
     }
 
     private int gridY(int y) {
-        return Math.floorDiv(y, 12);
+        return Math.floorDiv(y, Y_SPACING);
     }
 
     private int gridZ(int z) {
-        return Math.floorDiv(z, 16);
+        return Math.floorDiv(z, Z_SPACING);
     }
-
-    /**
-     * Calculates the aquifer at a given location. Internally references a cache using the grid positions as an index. If the cache is not populated, computes a new aquifer at that grid location using {@link #computeFluid.
-     *
-     * @param packedPos The aquifer block position, packed into a {@code long}.
-     */
-    private FluidStatus getAquiferStatus(long packedPos) {
-        int i = BlockPos.getX(packedPos);
-        int j = BlockPos.getY(packedPos);
-        int k = BlockPos.getZ(packedPos);
-        int l = this.gridX(i);
-        int m = this.gridY(j);
-        int n = this.gridZ(k);
-        int o = this.getIndex(l, m, n);
-        FluidStatus fluidStatus = this.aquiferCache[o];
-        if (fluidStatus != null) {
-            return fluidStatus;
-        } else {
-            FluidStatus fluidStatus2 = this.computeFluid(i, j, k);
-            this.aquiferCache[o] = fluidStatus2;
-            return fluidStatus2;
+    //optimize
+    private Aquifer.FluidStatus getAquiferStatus(long packedPos, double substance) {
+        int blockX = BlockPos.getX(packedPos);
+        int blockY = BlockPos.getY(packedPos);
+        int blockZ = BlockPos.getZ(packedPos);
+        int gridX = this.gridX(blockX);
+        int gridY = this.gridY(blockY);
+        int gridZ = this.gridZ(blockZ);
+        int aqIndex = this.getAqIndex(gridX, gridY, gridZ);
+        Aquifer.FluidStatus fluidStatus = this.aquiferCache[aqIndex];
+        if (fluidStatus == null) {
+            fluidStatus = this.computeFluid(blockX, blockY, blockZ, substance);
+            this.aquiferCache[aqIndex] = fluidStatus;
         }
+        return fluidStatus;
     }
 
-    private FluidStatus computeFluid(int x, int y, int z) {
-        FluidStatus fluidStatus = gfs;
-        int i = Integer.MAX_VALUE;
-        int j = y + 12;
-        int k = y - 12;
-        boolean bl = false;
-        int[][] var9 = SURFACE_SAMPLING_OFFSETS_IN_CHUNKS;
-        int var10 = var9.length;
+    private Aquifer.FluidStatus computeFluid(int blockX, int blockY, int blockZ, double substance) {
+        if(!isTargetBiome(blockX,blockY,blockZ))return new FluidStatus(0, Blocks.AIR.defaultBlockState());
 
-        for (int var11 = 0; var11 < var10; ++var11) {
-            int[] is = var9[var11];
-            int l = x + SectionPos.sectionToBlockCoord(is[0]);
-            int m = z + SectionPos.sectionToBlockCoord(is[1]);
-            int n = this.noiseChunk.preliminarySurfaceLevel(l, m);
-            int o = n + 8;
-            boolean bl2 = is[0] == 0 && is[1] == 0;
-            if (bl2 && k > o) {
-                return fluidStatus;
+        Aquifer.FluidStatus globalFluid = this.globalFluidPicker.computeFluid(blockX, blockY, blockZ); //water
+        int minSurfaceLevel = Integer.MAX_VALUE;
+        int above = blockY + Y_SPACING;
+        int below = blockY - Y_SPACING;
+        boolean bl = false;
+
+        for (int[] is : SURFACE_SAMPLING_OFFSETS_IN_CHUNKS) {
+            int x = blockX + SectionPos.sectionToBlockCoord(is[0]);
+            int z = blockZ + SectionPos.sectionToBlockCoord(is[1]);
+            int surfaceLevel = this.noiseChunk.preliminarySurfaceLevel(x, z);
+
+            int waterSurface = surfaceLevel + MAX_AQUIFER_H_FROM_GROUND;
+            boolean isCenter = is[0] == 0 && is[1] == 0;
+            if (isCenter && waterSurface < below) { //cant exist in mid air
+
+                return new Aquifer.FluidStatus(64, Blocks.LAPIS_BLOCK.defaultBlockState());
             }
 
-            boolean bl3 = j > o;
-            if (bl3 || bl2) {
-                FluidStatus fluidStatus2 = gfs;
-                if (!fluidStatus2.at(o).isAir()) {
-                    if (bl2) {
+            boolean aboveground = above > waterSurface;
+            if (aboveground || isCenter) {
+                Aquifer.FluidStatus fluidStatus2 = this.globalFluidPicker.computeFluid(x, waterSurface, z);
+                if (!fluidStatus2.at(waterSurface).isAir()) {
+                    if (isCenter) {
                         bl = true;
                     }
 
-                    if (bl3) {
+                    if (aboveground) {
                         return fluidStatus2;
                     }
                 }
             }
 
-            i = Math.min(i, n);
+            minSurfaceLevel = Math.min(minSurfaceLevel, surfaceLevel);
         }
 
-        int p = this.computeSurfaceLevel(x, y, z, fluidStatus, i, bl);
-        return new FluidStatus(p, this.computeFluidType(x, y, z, fluidStatus, p));
-
+        int surfaceLevel = this.computeSurfaceLevel(blockX, blockY, blockZ, globalFluid, minSurfaceLevel, bl);
+        return new Aquifer.FluidStatus(surfaceLevel, this.computeFluidType(blockX, blockY, blockZ, globalFluid, surfaceLevel));
     }
 
-    private int computeSurfaceLevel(int i, int j, int k, FluidStatus fluidStatus, int l, boolean bl) {
-        DensityFunction.SinglePointContext singlePointContext = new DensityFunction.SinglePointContext(i, j, k);
+    private int computeSurfaceLevel(int blockX, int blockY, int blockZ, Aquifer.FluidStatus globalFluidStatus,
+                                    int minSurfaceLevel, boolean bl) {
+        if(true)return  60;
+        DensityFunction.SinglePointContext singlePointContext = new DensityFunction.SinglePointContext(blockX, blockY, blockZ);
         double d;
         double e;
         if (OverworldBiomeBuilder.isDeepDarkRegion(this.erosion.compute(singlePointContext), this.depth.compute(singlePointContext))) {
             d = -1.0;
             e = -1.0;
         } else {
-            int m = l + 8 - j;
+            int m = minSurfaceLevel + MAX_AQUIFER_H_FROM_GROUND - blockY;
             int n = 64;
-            double f = bl ? Mth.clampedMap((double) m, 0.0, 64.0, 1.0, 0.0) : 0.0;
+            double f = bl ? Mth.clampedMap( m, 0.0, 64.0, 1.0, 0.0) : 0.0;
             double g = Mth.clamp(this.fluidLevelFloodednessNoise.compute(singlePointContext), -1.0, 1.0);
             double h = Mth.map(f, 1.0, 0.0, -0.3, 0.8);
             double o = Mth.map(f, 1.0, 0.0, -0.8, 0.4);
@@ -363,16 +379,16 @@ public class Saltifer {
             e = g - h;
         }
 
-        int m;
+        int level;
         if (e > 0.0) {
-            m = fluidStatus.fluidLevel;
+            level = globalFluidStatus.fluidLevel;
         } else if (d > 0.0) {
-            m = this.computeRandomizedFluidSurfaceLevel(i, j, k, l);
+            level = this.computeRandomizedFluidSurfaceLevel(blockX, blockY, blockZ, minSurfaceLevel);
         } else {
-            m = DimensionType.WAY_BELOW_MIN_Y;
+            level = DimensionType.WAY_BELOW_MIN_Y;
         }
 
-        return m;
+        return level;
     }
 
     private int computeRandomizedFluidSurfaceLevel(int i, int j, int k, int l) {
@@ -389,7 +405,7 @@ public class Saltifer {
         return Math.min(l, u);
     }
 
-    private BlockState computeFluidType(int i, int j, int k, FluidStatus fluidStatus, int l) {
+    private BlockState computeFluidType(int i, int j, int k, Aquifer.FluidStatus fluidStatus, int l) {
         BlockState blockState = fluidStatus.fluidType;
         if (l <= -10 && l != DimensionType.WAY_BELOW_MIN_Y && fluidStatus.fluidType != Blocks.LAVA.defaultBlockState()) {
             int m = 64;
@@ -404,31 +420,28 @@ public class Saltifer {
         }
 
         return blockState;
-
     }
 
-    public interface FluidPicker {
-        net.minecraft.world.level.levelgen.Aquifer.FluidStatus computeFluid(int i, int j, int k);
+    public void setBiomeSource(MultiNoiseBiomeSource biomeSource) {
+        this.biomeSource = biomeSource;
     }
 
-    public static final class FluidStatus {
-        /**
-         * The y height of the aquifer.
-         */
-        final int fluidLevel;
-        /**
-         * The fluid state the aquifer is filled with.
-         */
-        final BlockState fluidType;
-
-        public FluidStatus(int i, BlockState blockState) {
-            this.fluidLevel = i;
-            this.fluidType = blockState;
+    private boolean isTargetBiome(int x, int y, int z) {
+        if (biomeSource != null) {
+            DensityFunction.SinglePointContext singlePointContext = new DensityFunction.SinglePointContext(x, y, z);
+            var t = Climate.target(
+                    (float) noiseRouter.temperature().compute(singlePointContext),
+                    (float) noiseRouter.vegetation().compute(singlePointContext),
+                    (float) noiseRouter.continents().compute(singlePointContext),
+                    (float) noiseRouter.erosion().compute(singlePointContext),
+                    (float) noiseRouter.depth().compute(singlePointContext),
+                    (float) noiseRouter.ridges().compute(singlePointContext));
+            var b = biomeSource.getNoiseBiome(t);
+            if (b.is(Biomes.DEEP_OCEAN)) {
+                return true;
+            }
         }
-
-        public BlockState at(int y) {
-            return y < this.fluidLevel ? this.fluidType : Blocks.AIR.defaultBlockState();
-        }
+        return true;
     }
+
 }
-
