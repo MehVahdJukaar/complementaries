@@ -18,9 +18,9 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class HaliteColor implements BlockColor {
-    private static final List<HCLColor> SOAP_COLORS =
-            Stream.of(0xd9c1cb, 0xdbd7c8, 0xdbbcb7, 0xe6ceb7, -1, -1, -1, -1, -1)
-                    .map(RGBColor::new).map(BaseColor::asHCL).toList();
+    private static final List<RGBColor>         SOAP_COLORS =
+            Stream.of(0xd9c1cb,0xf7cec2, 0xdbbcb7,-1,-1, 0xe6ceb7, -1, -1, -1, -1, -1)
+            .map(RGBColor::new).toList();
 
     PerlinSimplexNoise NOISE = new PerlinSimplexNoise(new LegacyRandomSource(2382921L),
             List.of(-4, -3, -2, -1, 0, 1, 2, 3, 4));
@@ -28,9 +28,7 @@ public class HaliteColor implements BlockColor {
 
     public static HCLColor getHaliteColor(float phase) {
         if (phase >= 1) phase = phase % 1;
-       var SOAP_COLORS =
-                Stream.of(0xd9c1cb,0xf7cec2, 0xdbbcb7,-1,-1, 0xe6ceb7, -1, -1, -1, -1, -1)
-                        .map(RGBColor::new).toList();
+
         int n = SOAP_COLORS.size();
         float g = n * phase;
         int ind = (int) Math.floor(g);

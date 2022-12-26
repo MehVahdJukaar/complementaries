@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.complementaries.mixins;
 
+import net.mehvahdjukaar.complementaries.common.worldgen.BeardifierAccess;
 import net.mehvahdjukaar.complementaries.common.worldgen.NC;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
@@ -36,7 +37,11 @@ public class NoiseBasedChunkGeneratorMixin {
                    CallbackInfoReturnable<OptionalInt> cir, NoiseSettings noiseSettings,
                    int i, int j, int k, int l, BlockState[] blockStates, int m, int n, int o, int p,
                    int q, int r, int s, double d, double e, NoiseChunk noiseChunk, int t, int u, int v, double f) {
-         ((NC) noiseChunk).getSaltifer().setBiomeSource ((MultiNoiseBiomeSource) ((NoiseBasedChunkGenerator)(Object) this).getBiomeSource());
+
+
+      //   ((NC) noiseChunk).getSaltifer().setBiomeSource ((MultiNoiseBiomeSource) ((NoiseBasedChunkGenerator)(Object) this).getBiomeSource());
+         var b = ((NC) noiseChunk).getBreadifier();
+         if(b instanceof BeardifierAccess sb)sb.getInner().initialize((MultiNoiseBiomeSource) ((NoiseBasedChunkGenerator)(Object) this).getBiomeSource());
     }
 
     @Inject(method = "doFill",
@@ -45,6 +50,9 @@ public class NoiseBasedChunkGeneratorMixin {
                     shift = At.Shift.BEFORE,
                     target = "Lnet/minecraft/world/level/levelgen/NoiseChunk;getInterpolatedState()Lnet/minecraft/world/level/block/state/BlockState;"))
     public void passBiomeSource(Blender blender, StructureManager structureManager, RandomState random, ChunkAccess chunk, int minCellY, int cellCountY, CallbackInfoReturnable<ChunkAccess> cir, NoiseChunk noiseChunk, Heightmap heightmap, Heightmap heightmap2, ChunkPos chunkPos, int i, int j, Aquifer aquifer, BlockPos.MutableBlockPos mutableBlockPos, int k, int l, int m, int n, int o, int p, LevelChunkSection levelChunkSection, int q, int r, int s, int t, int u, double d, int v, int w, int x, double e, int y, int z, int aa, double f) {
-        ((NC) noiseChunk).getSaltifer().setBiomeSource ((MultiNoiseBiomeSource) ((NoiseBasedChunkGenerator)(Object) this).getBiomeSource() );
+     //   ((NC) noiseChunk).getSaltifer().setBiomeSource ((MultiNoiseBiomeSource) ((NoiseBasedChunkGenerator)(Object) this).getBiomeSource() );
+        var b = ((NC) noiseChunk).getBreadifier();
+        if(b instanceof BeardifierAccess sb)sb.getInner().initialize((MultiNoiseBiomeSource) ((NoiseBasedChunkGenerator)(Object) this).getBiomeSource());
+
     }
 }

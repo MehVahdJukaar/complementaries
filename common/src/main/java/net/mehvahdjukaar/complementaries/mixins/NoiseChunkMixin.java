@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.complementaries.mixins;
 
+import net.mehvahdjukaar.complementaries.common.worldgen.BeardifierAccess;
 import net.mehvahdjukaar.complementaries.common.worldgen.NC;
+import net.mehvahdjukaar.complementaries.common.worldgen.SaltBeardifier;
 import net.mehvahdjukaar.complementaries.common.worldgen.Saltifer;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Climate;
@@ -11,8 +13,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import terrablender.core.TerraBlender;
-import terrablender.core.TerraBlenderForge;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -36,12 +36,19 @@ public abstract class NoiseChunkMixin implements NC {
 
     @Shadow protected abstract Climate.Sampler cachedClimateSampler(NoiseRouter noiseRouter, List<Climate.ParameterPoint> points);
 
+    @Shadow @Final private DensityFunctions.BeardifierOrMarker beardifier;
+    @Shadow private int inCellX;
     @Unique
     @Nullable
     private Saltifer saltifer;
 
     public void setSaltifer(Saltifer saltifer) {
         this.saltifer = saltifer;
+    }
+
+    @Override
+    public DensityFunctions.BeardifierOrMarker getBreadifier() {
+        return beardifier;
     }
 
     @Nullable
@@ -53,8 +60,11 @@ public abstract class NoiseChunkMixin implements NC {
 
     @ModifyArg(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/levelgen/Aquifer;create(Lnet/minecraft/world/level/levelgen/NoiseChunk;Lnet/minecraft/world/level/ChunkPos;Lnet/minecraft/world/level/levelgen/NoiseRouter;Lnet/minecraft/world/level/levelgen/PositionalRandomFactory;IILnet/minecraft/world/level/levelgen/Aquifer$FluidPicker;)Lnet/minecraft/world/level/levelgen/Aquifer;"))
     private NoiseChunk createSaltifer(NoiseChunk chunk, ChunkPos chunkPos, NoiseRouter noiseRouter, PositionalRandomFactory positionalRandomFactory, int minY, int height, Aquifer.FluidPicker globalFluidPicker) {
-        Saltifer saltifer = new Saltifer(chunk, chunkPos, noiseRouter, positionalRandomFactory, minY, height, globalFluidPicker);
-        this.setSaltifer(saltifer);
+        //Saltifer saltifer = new Saltifer(chunk, chunkPos, noiseRouter, positionalRandomFactory, minY, height, globalFluidPicker);
+       // this.setSaltifer(saltifer);
+        if(this.beardifier instanceof  BeardifierAccess ba) {
+            ba.addInner(chunk, chunkPos, noiseRouter, positionalRandomFactory);
+        }
         return chunk;
     }
 }

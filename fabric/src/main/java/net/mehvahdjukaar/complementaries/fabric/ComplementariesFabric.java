@@ -6,6 +6,7 @@ import net.mehvahdjukaar.complementaries.ComplementariesClient;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.fabric.FabricSetupCallbacks;
 import net.minecraft.world.level.levelgen.Aquifer;
+import net.minecraft.world.level.levelgen.Beardifier;
 
 public class ComplementariesFabric implements ModInitializer {
 

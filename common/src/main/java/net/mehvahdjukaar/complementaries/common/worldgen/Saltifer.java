@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.complementaries.common.worldgen;
 
 
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.util.Mth;
@@ -28,15 +29,15 @@ import java.util.Arrays;
  * Borders between aquifers are created by comparing nearby aquifers to see if the given point is near-equidistant from them, indicating a border if so, or fluid/air depending on the aquifer height if not.
  */
 public class Saltifer implements Aquifer {
-    private static final int X_RANGE = 10;
-    private static final int Y_RANGE = 9;
-    private static final int Z_RANGE = 10;
+    private static final int X_RANGE = 6;
+    private static final int Y_RANGE = 1;
+    private static final int Z_RANGE = 6;
     private static final int X_SEPARATION = 6;
     private static final int Y_SEPARATION = 3;
     private static final int Z_SEPARATION = 6;
-    private static final int X_SPACING = 16;
-    private static final int Y_SPACING = 12;
-    private static final int Z_SPACING = 16;
+    private static final int X_SPACING = 8;
+    private static final int Y_SPACING = 1;
+    private static final int Z_SPACING = 8;
     private static final int MAX_REASONABLE_DISTANCE_TO_AQUIFER_CENTER = 11;
     private static final double FLOWING_UPDATE_SIMULARITY = similarity(Mth.square(10), Mth.square(12));
     private final NoiseChunk noiseChunk;
@@ -61,7 +62,9 @@ public class Saltifer implements Aquifer {
             {-2, -1}, {-1, -1}, {0, -1}, {1, -1}, {-3, 0}, {-2, 0}, {-1, 0}, {0, 0}, {1, 0}, {-2, 1}, {-1, 1}, {0, 1}, {1, 1}
     };
     private MultiNoiseBiomeSource biomeSource;
-    private int  MAX_AQUIFER_H_FROM_GROUND = 8;
+    private int MAX_AQUIFER_H_FROM_GROUND = 20;
+
+
 
     public Saltifer(
             NoiseChunk noiseChunk,
@@ -82,7 +85,9 @@ public class Saltifer implements Aquifer {
         this.depth = noiseRouter.depth();
         this.positionalRandomFactory = positionalRandomFactory;
         this.minGridX = this.gridX(chunkPos.getMinBlockX()) - 1;
-        this.globalFluidPicker = (a, b, c) -> fluidPicker.computeFluid(a, 64, c);
+        Aquifer.FluidStatus fluidStatus2 = new Aquifer.FluidStatus(60, Blocks.WATER.defaultBlockState());
+        Aquifer.FluidStatus fluidStatus3 = new Aquifer.FluidStatus(DimensionType.MIN_Y * 2, Blocks.AIR.defaultBlockState());
+        this.globalFluidPicker = (a, k, c) -> (k > 50) ? fluidStatus2 : fluidStatus3;
         int k = this.gridX(chunkPos.getMaxBlockX()) + 1;
         this.gridSizeX = k - this.minGridX + 1;
         this.minGridY = this.gridY(i) - 1;
@@ -95,6 +100,7 @@ public class Saltifer implements Aquifer {
         this.aquiferCache = new Aquifer.FluidStatus[o];
         this.aquiferLocationCache = new long[o];
         Arrays.fill(this.aquiferLocationCache, Long.MAX_VALUE);
+
     }
 
     private int getAqIndex(int gridX, int gridY, int gridZ) {
@@ -110,10 +116,18 @@ public class Saltifer implements Aquifer {
         int blockX = context.blockX();
         int blockY = context.blockY();
         int blockZ = context.blockZ();
-        if (substance > 0.0) { //greater than 0 means theres terrain there. we only use negative substance
+        if (isTargetBiome(blockX, blockY, blockZ)) {
+            if (blockY > 62 && 70 > noiseChunk.preliminarySurfaceLevel(blockX, blockZ)) {
+                return Blocks.AIR.defaultBlockState();
+            } else if (blockY > 50 && blockY < 63) return Blocks.CRIMSON_PLANKS.defaultBlockState();
+        }
+        if (substance > 0.0) {
+
+            //greater than 0 means theres terrain there. we only use negative substance
             this.shouldScheduleFluidUpdate = false;
             return null;
         } else {
+            if (true) return Blocks.AIR.defaultBlockState();
             int aqGridX = gridX(blockX - 5);
             int aqGridY = gridY(blockY + 1);
             int aqGridZ = gridZ(blockZ - 5);
@@ -218,9 +232,9 @@ public class Saltifer implements Aquifer {
     private double similarity(int firstDistance, int secondDistance, long firstPos, long secondPos) {
         double old = similarity(firstDistance, secondDistance);
         if (old > 0) {
-           boolean f = isTargetBiome(BlockPos.getX(firstPos), BlockPos.getY(firstPos), BlockPos.getZ(firstPos));
-         boolean s =isTargetBiome(BlockPos.getX(secondPos), BlockPos.getY(secondPos), BlockPos.getZ(secondPos));
-         if(s || f)return 1;
+            boolean f = isTargetBiome(BlockPos.getX(firstPos), BlockPos.getY(firstPos), BlockPos.getZ(firstPos));
+            boolean s = isTargetBiome(BlockPos.getX(secondPos), BlockPos.getY(secondPos), BlockPos.getZ(secondPos));
+            if (s || f) return 1;
 
         }
         return old;
@@ -232,17 +246,17 @@ public class Saltifer implements Aquifer {
     }
 
     private double calculatePressure(DensityFunction.FunctionContext context, MutableDouble substance, Aquifer.FluidStatus firstFluid, Aquifer.FluidStatus secondFluid) {
-        int i = context.blockY();
-        BlockState blockState = firstFluid.at(i);
-        BlockState blockState2 = secondFluid.at(i);
-        if ((!blockState.is(Blocks.LAVA) || !blockState2.is(Blocks.WATER)) && (!blockState.is(Blocks.WATER) || !blockState2.is(Blocks.LAVA))) {
-            int j = Math.abs(firstFluid.fluidLevel - secondFluid.fluidLevel);
-            if (j == 0) {
+        int blockY = context.blockY();
+        BlockState blockState = firstFluid.at(blockY);
+        BlockState blockState2 = secondFluid.at(blockY);
+        if (blockState2.is(blockState.getBlock())) {
+            int deltaLevel = Math.abs(firstFluid.fluidLevel - secondFluid.fluidLevel);
+            if (deltaLevel == 0) {
                 return 0.0;
             } else {
-                double d = 0.5 * (double) (firstFluid.fluidLevel + secondFluid.fluidLevel);
-                double e = (double) i + 0.5 - d;
-                double f = (double) j / 2.0;
+                double d = 0.5 * (firstFluid.fluidLevel + secondFluid.fluidLevel);
+                double e = blockY + 0.5 - d;
+                double f = deltaLevel / 2.0;
                 double g = 0.0;
                 double h = 2.5;
                 double k = 1.5;
@@ -300,6 +314,7 @@ public class Saltifer implements Aquifer {
     private int gridZ(int z) {
         return Math.floorDiv(z, Z_SPACING);
     }
+
     //optimize
     private Aquifer.FluidStatus getAquiferStatus(long packedPos, double substance) {
         int blockX = BlockPos.getX(packedPos);
@@ -318,13 +333,13 @@ public class Saltifer implements Aquifer {
     }
 
     private Aquifer.FluidStatus computeFluid(int blockX, int blockY, int blockZ, double substance) {
-        if(!isTargetBiome(blockX,blockY,blockZ))return new FluidStatus(0, Blocks.AIR.defaultBlockState());
+        if (!isTargetBiome(blockX, blockY, blockZ)) return new FluidStatus(0, Blocks.AIR.defaultBlockState());
 
         Aquifer.FluidStatus globalFluid = this.globalFluidPicker.computeFluid(blockX, blockY, blockZ); //water
         int minSurfaceLevel = Integer.MAX_VALUE;
         int above = blockY + Y_SPACING;
         int below = blockY - Y_SPACING;
-        boolean bl = false;
+        boolean hasWaterAboveGround = false;
 
         for (int[] is : SURFACE_SAMPLING_OFFSETS_IN_CHUNKS) {
             int x = blockX + SectionPos.sectionToBlockCoord(is[0]);
@@ -335,19 +350,19 @@ public class Saltifer implements Aquifer {
             boolean isCenter = is[0] == 0 && is[1] == 0;
             if (isCenter && waterSurface < below) { //cant exist in mid air
 
-                return new Aquifer.FluidStatus(64, Blocks.LAPIS_BLOCK.defaultBlockState());
+                return new Aquifer.FluidStatus(globalFluid.fluidLevel, Blocks.LAPIS_BLOCK.defaultBlockState());
             }
 
             boolean aboveground = above > waterSurface;
             if (aboveground || isCenter) {
-                Aquifer.FluidStatus fluidStatus2 = this.globalFluidPicker.computeFluid(x, waterSurface, z);
-                if (!fluidStatus2.at(waterSurface).isAir()) {
+                Aquifer.FluidStatus aboveGroundWater = this.globalFluidPicker.computeFluid(x, waterSurface, z);
+                if (!aboveGroundWater.at(waterSurface).isAir()) {
                     if (isCenter) {
-                        bl = true;
+                        hasWaterAboveGround = true;
                     }
 
                     if (aboveground) {
-                        return fluidStatus2;
+                        return aboveGroundWater;
                     }
                 }
             }
@@ -355,13 +370,13 @@ public class Saltifer implements Aquifer {
             minSurfaceLevel = Math.min(minSurfaceLevel, surfaceLevel);
         }
 
-        int surfaceLevel = this.computeSurfaceLevel(blockX, blockY, blockZ, globalFluid, minSurfaceLevel, bl);
+        int surfaceLevel = this.computeSurfaceLevel(blockX, blockY, blockZ, globalFluid, minSurfaceLevel, hasWaterAboveGround);
         return new Aquifer.FluidStatus(surfaceLevel, this.computeFluidType(blockX, blockY, blockZ, globalFluid, surfaceLevel));
     }
 
     private int computeSurfaceLevel(int blockX, int blockY, int blockZ, Aquifer.FluidStatus globalFluidStatus,
                                     int minSurfaceLevel, boolean bl) {
-        if(true)return  60;
+        if (true) return globalFluidStatus.fluidLevel; //we always use same level
         DensityFunction.SinglePointContext singlePointContext = new DensityFunction.SinglePointContext(blockX, blockY, blockZ);
         double d;
         double e;
@@ -371,7 +386,7 @@ public class Saltifer implements Aquifer {
         } else {
             int m = minSurfaceLevel + MAX_AQUIFER_H_FROM_GROUND - blockY;
             int n = 64;
-            double f = bl ? Mth.clampedMap( m, 0.0, 64.0, 1.0, 0.0) : 0.0;
+            double f = bl ? Mth.clampedMap(m, 0.0, 64.0, 1.0, 0.0) : 0.0;
             double g = Mth.clamp(this.fluidLevelFloodednessNoise.compute(singlePointContext), -1.0, 1.0);
             double h = Mth.map(f, 1.0, 0.0, -0.3, 0.8);
             double o = Mth.map(f, 1.0, 0.0, -0.8, 0.4);
@@ -437,11 +452,11 @@ public class Saltifer implements Aquifer {
                     (float) noiseRouter.depth().compute(singlePointContext),
                     (float) noiseRouter.ridges().compute(singlePointContext));
             var b = biomeSource.getNoiseBiome(t);
-            if (b.is(Biomes.DEEP_OCEAN)) {
+            if (b.is(Biomes.SWAMP)) {
                 return true;
             }
         }
-        return true;
+        return false;
     }
 
 }
