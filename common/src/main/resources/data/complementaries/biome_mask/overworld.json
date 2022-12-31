@@ -1,0 +1,612 @@
+{
+  "type": "minecraft:overworld",
+  "generator": {
+    "biome_source": {
+      "biomes": [
+        {
+          "parameters": {
+            "weirdness": [
+              -1,
+              1
+            ],
+            "continentalness": [
+              -1.2,
+              1
+            ],
+            "erosion": [
+              -1,
+              1
+            ],
+            "temperature": [
+              -1,
+              0.55
+            ],
+            "humidity": [
+              -1,
+              1
+            ],
+            "depth": [
+              0,
+              0
+            ],
+            "offset": 0
+          },
+          "biome": "minecraft:swamp"
+        },
+        {
+          "parameters": {
+            "weirdness": [
+              -1,
+              1
+            ],
+            "continentalness": [
+              -1.2,
+              0.3
+            ],
+            "erosion": [
+              -1,
+              1
+            ],
+            "temperature": [
+              0.55,
+              1
+            ],
+            "humidity": [
+              -1,
+              1
+            ],
+            "depth": [
+              0,
+              0
+            ],
+            "offset": 0
+          },
+          "biome": "minecraft:swamp"
+        },
+        {
+          "parameters": {
+            "weirdness": [
+              -1,
+              1
+            ],
+            "continentalness": [
+              0.3,
+              1
+            ],
+            "erosion": [
+              -1,
+              0.05
+            ],
+            "temperature": [
+              0.55,
+              1
+            ],
+            "humidity": [
+              -1,
+              1
+            ],
+            "depth": [
+              0,
+              0
+            ],
+            "offset": 0
+          },
+          "biome": "minecraft:swamp"
+        },
+        {
+          "parameters": {
+            "weirdness": [
+              -1,
+              -0.93333334
+            ],
+            "continentalness": [
+              0.3,
+              1
+            ],
+            "erosion": [
+              0.05,
+              1
+            ],
+            "temperature": [
+              0.55,
+              1
+            ],
+            "humidity": [
+              -1,
+              0.3
+            ],
+            "depth": [
+              0,
+              0
+            ],
+            "offset": 0
+          },
+          "biome": "minecraft:mushroom_fields"
+        },
+        {
+          "parameters": {
+            "weirdness": [
+              -1,
+              1
+            ],
+            "continentalness": [
+              0.3,
+              1
+            ],
+            "erosion": [
+              0.05,
+              1
+            ],
+            "temperature": [
+              0.55,
+              1
+            ],
+            "humidity": [
+              0.3,
+              1
+            ],
+            "depth": [
+              0,
+              0
+            ],
+            "offset": 0
+          },
+          "biome": "minecraft:swamp"
+        },
+        {
+          "parameters": {
+            "weirdness": [
+              -0.93333334,
+              -0.4
+            ],
+            "continentalness": [
+              0.3,
+              1
+            ],
+            "erosion": [
+              0.05,
+              1
+            ],
+            "temperature": [
+              0.55,
+              1
+            ],
+            "humidity": [
+              -1,
+              1
+            ],
+            "depth": [
+              0,
+              0
+            ],
+            "offset": 0
+          },
+          "biome": "minecraft:swamp"
+        },
+        {
+          "parameters": {
+            "weirdness": [
+              -0.4,
+              0.4
+            ],
+            "continentalness": [
+              0.3,
+              1
+            ],
+            "erosion": [
+              0.05,
+              1
+            ],
+            "temperature": [
+              0.55,
+              1
+            ],
+            "humidity": [
+              -1,
+              0.3
+            ],
+            "depth": [
+              0,
+              0
+            ],
+            "offset": 0
+          },
+          "biome": "minecraft:mushroom_fields"
+        },
+        {
+          "parameters": {
+            "weirdness": [
+              0.4,
+              0.93333334
+            ],
+            "continentalness": [
+              0.3,
+              1
+            ],
+            "erosion": [
+              0.05,
+              1
+            ],
+            "temperature": [
+              0.55,
+              1
+            ],
+            "humidity": [
+              -1,
+              1
+            ],
+            "depth": [
+              0,
+              0
+            ],
+            "offset": 0
+          },
+          "biome": "minecraft:swamp"
+        },
+        {
+          "parameters": {
+            "weirdness": [
+              0.93333334,
+              1
+            ],
+            "continentalness": [
+              0.3,
+              1
+            ],
+            "erosion": [
+              0.05,
+              1
+            ],
+            "temperature": [
+              0.55,
+              1
+            ],
+            "humidity": [
+              -1,
+              0.3
+            ],
+            "depth": [
+              0,
+              0
+            ],
+            "offset": 0
+          },
+          "biome": "minecraft:mushroom_fields"
+        },
+        {
+          "parameters": {
+            "weirdness": [
+              -1,
+              1
+            ],
+            "continentalness": [
+              -1.2,
+              1
+            ],
+            "erosion": [
+              -1,
+              1
+            ],
+            "temperature": [
+              -1,
+              1
+            ],
+            "humidity": [
+              -1,
+              1
+            ],
+            "depth": [
+              0.2,
+              0.9
+            ],
+            "offset": 0
+          },
+          "biome": "minecraft:swamp"
+        },
+        {
+          "parameters": {
+            "weirdness": [
+              -1,
+              1
+            ],
+            "continentalness": [
+              -1.2,
+              1
+            ],
+            "erosion": [
+              -1,
+              1
+            ],
+            "temperature": [
+              -1,
+              0.55
+            ],
+            "humidity": [
+              -1,
+              1
+            ],
+            "depth": [
+              1,
+              1
+            ],
+            "offset": 0
+          },
+          "biome": "minecraft:swamp"
+        },
+        {
+          "parameters": {
+            "weirdness": [
+              -1,
+              1
+            ],
+            "continentalness": [
+              -1.2,
+              0.3
+            ],
+            "erosion": [
+              -1,
+              1
+            ],
+            "temperature": [
+              0.55,
+              1
+            ],
+            "humidity": [
+              -1,
+              1
+            ],
+            "depth": [
+              1,
+              1
+            ],
+            "offset": 0
+          },
+          "biome": "minecraft:swamp"
+        },
+        {
+          "parameters": {
+            "weirdness": [
+              -1,
+              1
+            ],
+            "continentalness": [
+              0.3,
+              1
+            ],
+            "erosion": [
+              -1,
+              0.05
+            ],
+            "temperature": [
+              0.55,
+              1
+            ],
+            "humidity": [
+              -1,
+              1
+            ],
+            "depth": [
+              1,
+              1
+            ],
+            "offset": 0
+          },
+          "biome": "minecraft:swamp"
+        },
+        {
+          "parameters": {
+            "weirdness": [
+              -1,
+              -0.93333334
+            ],
+            "continentalness": [
+              0.3,
+              1
+            ],
+            "erosion": [
+              0.05,
+              1
+            ],
+            "temperature": [
+              0.55,
+              1
+            ],
+            "humidity": [
+              -1,
+              0.3
+            ],
+            "depth": [
+              1,
+              1
+            ],
+            "offset": 0
+          },
+          "biome": "minecraft:mushroom_fields"
+        },
+        {
+          "parameters": {
+            "weirdness": [
+              -1,
+              1
+            ],
+            "continentalness": [
+              0.3,
+              1
+            ],
+            "erosion": [
+              0.05,
+              1
+            ],
+            "temperature": [
+              0.55,
+              1
+            ],
+            "humidity": [
+              0.3,
+              1
+            ],
+            "depth": [
+              1,
+              1
+            ],
+            "offset": 0
+          },
+          "biome": "minecraft:swamp"
+        },
+        {
+          "parameters": {
+            "weirdness": [
+              -0.93333334,
+              -0.4
+            ],
+            "continentalness": [
+              0.3,
+              1
+            ],
+            "erosion": [
+              0.05,
+              1
+            ],
+            "temperature": [
+              0.55,
+              1
+            ],
+            "humidity": [
+              -1,
+              1
+            ],
+            "depth": [
+              1,
+              1
+            ],
+            "offset": 0
+          },
+          "biome": "minecraft:swamp"
+        },
+        {
+          "parameters": {
+            "weirdness": [
+              -0.4,
+              0.4
+            ],
+            "continentalness": [
+              0.3,
+              1
+            ],
+            "erosion": [
+              0.05,
+              1
+            ],
+            "temperature": [
+              0.55,
+              1
+            ],
+            "humidity": [
+              -1,
+              0.3
+            ],
+            "depth": [
+              1,
+              1
+            ],
+            "offset": 0
+          },
+          "biome": "minecraft:mushroom_fields"
+        },
+        {
+          "parameters": {
+            "weirdness": [
+              0.4,
+              0.93333334
+            ],
+            "continentalness": [
+              0.3,
+              1
+            ],
+            "erosion": [
+              0.05,
+              1
+            ],
+            "temperature": [
+              0.55,
+              1
+            ],
+            "humidity": [
+              -1,
+              1
+            ],
+            "depth": [
+              1,
+              1
+            ],
+            "offset": 0
+          },
+          "biome": "minecraft:swamp"
+        },
+        {
+          "parameters": {
+            "weirdness": [
+              0.93333334,
+              1
+            ],
+            "continentalness": [
+              0.3,
+              1
+            ],
+            "erosion": [
+              0.05,
+              1
+            ],
+            "temperature": [
+              0.55,
+              1
+            ],
+            "humidity": [
+              -1,
+              0.3
+            ],
+            "depth": [
+              1,
+              1
+            ],
+            "offset": 0
+          },
+          "biome": "minecraft:mushroom_fields"
+        },
+        {
+          "parameters": {
+            "weirdness": [
+              -1,
+              1
+            ],
+            "continentalness": [
+              -1.2,
+              1
+            ],
+            "erosion": [
+              -1,
+              1
+            ],
+            "temperature": [
+              -1,
+              1
+            ],
+            "humidity": [
+              -1,
+              1
+            ],
+            "depth": [
+              1.1,
+              1.1
+            ],
+            "offset": 0
+          },
+          "biome": "minecraft:swamp"
+        }
+      ],
+      "type": "minecraft:multi_noise"
+    },
+    "settings": "minecraft:overworld",
+    "type": "minecraft:noise"
+  }
+}

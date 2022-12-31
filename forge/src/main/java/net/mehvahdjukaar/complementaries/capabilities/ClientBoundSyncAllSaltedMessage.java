@@ -4,8 +4,10 @@ import com.mojang.blaze3d.platform.NativeImage;
 import net.mehvahdjukaar.complementaries.forge.ClientEvents;
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.levelgen.SurfaceRules;
 
 import java.util.HashSet;
 import java.util.Set;

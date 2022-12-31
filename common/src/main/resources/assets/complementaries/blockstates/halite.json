@@ -5,9 +5,23 @@
       "x": 90,
       "y": 90
     },
-    "axis=y": {
-      "model": "complementaries:block/halite"
-    },
+    "axis=y": [
+      {
+        "model": "complementaries:block/halite"
+      },
+      {
+        "model": "complementaries:block/halite",
+        "y": 90
+      },
+      {
+        "model": "complementaries:block/halite",
+        "y": 180
+      },
+      {
+        "model": "complementaries:block/halite",
+        "y": 270
+      }
+    ],
     "axis=z": {
       "model": "complementaries:block/halite",
       "x": 90

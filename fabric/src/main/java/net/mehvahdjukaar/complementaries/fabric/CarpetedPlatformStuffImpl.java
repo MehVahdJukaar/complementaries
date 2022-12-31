@@ -11,5 +11,5 @@ public class CarpetedPlatformStuffImpl {
 
     public static void removeAmbientOcclusion(List<BakedQuad> supportQuads) {
     }
-Aquifer
+
 }

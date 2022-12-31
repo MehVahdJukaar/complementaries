@@ -8,8 +8,8 @@
   "mixins": [
     "AquiferAccessor",
     "BeardifierMixin",
+    "MultiNoiseBiomeSourceAccessor",
     "NoiseAquiferMixin",
-    "NoiseBasedChunkGeneratorMixin",
     "NoiseChunkMixin"
   ],
   "injectors": {

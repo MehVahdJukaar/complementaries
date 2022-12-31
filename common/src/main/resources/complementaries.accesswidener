@@ -1,5 +1,8 @@
 accessWidener v2  named
 
 
+accessible class net/minecraft/world/level/levelgen/SurfaceRules$Condition
+accessible class net/minecraft/world/level/levelgen/SurfaceRules$Context
+
 accessible field net/minecraft/world/level/levelgen/Aquifer$FluidStatus fluidLevel I
 accessible field net/minecraft/world/level/levelgen/Aquifer$FluidStatus fluidType Lnet/minecraft/world/level/block/state/BlockState;

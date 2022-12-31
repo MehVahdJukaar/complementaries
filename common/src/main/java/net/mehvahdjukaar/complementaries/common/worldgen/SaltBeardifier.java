@@ -7,16 +7,29 @@ package net.mehvahdjukaar.complementaries.common.worldgen;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
+import net.mehvahdjukaar.complementaries.mixins.MultiNoiseBiomeSourceAccessor;
+import net.mehvahdjukaar.complementaries.reg.ModWorldgen;
 import net.minecraft.Util;
+import net.minecraft.core.Holder;
+import net.minecraft.core.QuartPos;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.MultiNoiseBiomeSource;
-import net.minecraft.world.level.levelgen.*;
+import net.minecraft.world.level.levelgen.DensityFunction;
 import net.minecraft.world.level.levelgen.DensityFunctions.BeardifierOrMarker;
+import net.minecraft.world.level.levelgen.NoiseChunk;
+import net.minecraft.world.level.levelgen.NoiseRouter;
+import net.minecraft.world.level.levelgen.PositionalRandomFactory;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
+import terrablender.core.TerraBlender;
+import terrablender.worldgen.IExtendedParameterList;
+
+import java.util.List;
 
 public class SaltBeardifier implements BeardifierOrMarker {
     public static final int BEARD_KERNEL_RADIUS = 12;
@@ -40,8 +53,9 @@ public class SaltBeardifier implements BeardifierOrMarker {
     private final PositionalRandomFactory random;
 
     private boolean[][] biomeCache = null;
-    private static final int START_Y = 70;
-    private static final int END_Y = 80;
+    private static final int START_Y = 64;
+    private static final int END_Y = 87;
+    private MultiNoiseBiomeSource biomeSource;
 
 
     public SaltBeardifier(NoiseChunk noiseChunk, ChunkPos chunkPos, NoiseRouter noiseRouter, PositionalRandomFactory randomFactory) {
@@ -54,7 +68,7 @@ public class SaltBeardifier implements BeardifierOrMarker {
         int z = chunkPos.getMinBlockZ();
 
         ObjectList<BoundingBox> objectList = new ObjectArrayList<>(10);
-        objectList.add(new BoundingBox(x, 40, z, x + 16, 70, z + 16));
+        objectList.add(new BoundingBox(x, 40, z, x + 4, 70, z + 4));
 
         this.pieceIterator = objectList.iterator();
 
@@ -62,12 +76,15 @@ public class SaltBeardifier implements BeardifierOrMarker {
 
 
     public double compute(FunctionContext context) {
+        if (this.biomeCache == null && biomeSource != null) lateInitialize(biomeSource);
+        if (this.biomeCache == null) return 0;
         int blockX = context.blockX();
         int blockY = context.blockY();
         int blockZ = context.blockZ();
         //if(blockY<START_Y)return 10;
 
-        if (blockY<START_Y || blockY>END_Y) return 0;
+
+        if (blockY < START_Y - 10 || blockY > END_Y + 20) return 0;
         double density;
         double deltaDensity;
         for (density = 0.0; this.pieceIterator.hasNext(); density += deltaDensity) {
@@ -140,35 +157,51 @@ public class SaltBeardifier implements BeardifierOrMarker {
     }
 
 
-    private boolean isTargetBiome(MultiNoiseBiomeSource source, int x, int y, int z) {
+    private boolean isTargetBiome(MultiNoiseBiomeSource source, int x, int y, int z, Climate.Sampler sampler) {
+        DensityFunction.SinglePointContext point = new DensityFunction.SinglePointContext(x,y,z);
+        var c = Climate.target((float)noiseRouter.temperature().compute(point),
+                (float)noiseRouter.vegetation().compute(point),
+                (float)noiseRouter.continents().compute(point),
+                (float)noiseRouter.erosion().compute(point),
+                (float)noiseRouter.depth().compute(point),
+                (float)noiseRouter.ridges().compute(point));
 
-        DensityFunction.SinglePointContext singlePointContext = new DensityFunction.SinglePointContext(x, y, z);
-        var t = Climate.target(
-                (float) noiseRouter.temperature().compute(singlePointContext),
-                (float) noiseRouter.vegetation().compute(singlePointContext),
-                (float) noiseRouter.continents().compute(singlePointContext),
-                (float) noiseRouter.erosion().compute(singlePointContext),
-                (float) noiseRouter.depth().compute(singlePointContext),
-                (float) noiseRouter.ridges().compute(singlePointContext));
-        var b = source.getNoiseBiome(t);
-        return b.is(Biomes.FOREST);
+        var b =((IExtendedParameterList<Holder<Biome>>)((MultiNoiseBiomeSourceAccessor)source).getParameters())
+                .findValuePositional(c, QuartPos.fromBlock(x),QuartPos.fromBlock(y),QuartPos.fromBlock(z));
+        return b.is(ModWorldgen.SALT_FLATS.getId());
     }
 
     private void computeBiomeCache(MultiNoiseBiomeSource source) {
+        Climate.Sampler sampler = new Climate.Sampler(noiseRouter.temperature(),
+                 noiseRouter.vegetation(),
+                noiseRouter.continents(),
+                noiseRouter.erosion(),
+                noiseRouter.depth(),
+                noiseRouter.ridges(), List.of());
+
+
         int chunkMinX = chunkPos.getMinBlockX();
         int chunkMinZ = chunkPos.getMinBlockZ();
         //offset to grab outer chunks too
         boolean[][] cache = new boolean[16 + 6][16 + 6];
         for (int x = 0; x < cache.length; x++) {
             for (int z = 0; z < cache[x].length; z++) {
-                cache[x][z] = isTargetBiome(source, indexToPos(x, chunkMinX)+2, 64, indexToPos(z, chunkMinZ)+2);
+                cache[x][z] = isTargetBiome(source,
+                        indexToPos(x, chunkMinX) + 2,
+                       64,
+                        indexToPos(z, chunkMinZ) + 2,
+                        sampler);
             }
         }
         this.biomeCache = cache;
     }
 
     public void initialize(MultiNoiseBiomeSource biomeSource) {
-        if(biomeCache == null) {
+        this.biomeSource = biomeSource;
+    }
+
+    private void lateInitialize(MultiNoiseBiomeSource biomeSource) {
+        if (biomeCache == null) {
             this.computeBiomeCache(biomeSource);
             int minBlockX = chunkPos.getMinBlockX();
             int minBlockZ = chunkPos.getMinBlockZ();
@@ -179,18 +212,17 @@ public class SaltBeardifier implements BeardifierOrMarker {
                     if (biomeCache[i][j]) {
                         int px = indexToPos(i, minBlockX);
                         int pz = indexToPos(j, minBlockZ);
-                        objectList.add(new BoundingBox(px, START_Y, pz, px + 4, END_Y, pz + 4));
+                        objectList.add(new BoundingBox(px, START_Y, pz,
+                                px + 4, END_Y, pz + 4));
 
                     }
                 }
             }
             this.pieceIterator = objectList.iterator();
-        }else{
-            int aa = 1;
         }
-
     }
 
+    //use quartPos instead
     private static int indexToPos(int index, int chunkMin) {
         return chunkMin + ((index - 3) * 4);
     }

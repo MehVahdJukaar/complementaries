@@ -14,6 +14,8 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 /**
  * Author: MehVahdJukaar
@@ -31,8 +33,14 @@ public class ComplementariesForge {
         NetworkHandler.CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
                 ClientBoundSyncAllSaltedMessage.class,
                 ClientBoundSyncAllSaltedMessage::new);
+
+        FMLJavaModLoadingContext.get().getModEventBus().register(this);
     }
 
+    @SubscribeEvent
+    public void setup(FMLCommonSetupEvent event){
+        Complementaries.setup();
+    }
 
 
 }
