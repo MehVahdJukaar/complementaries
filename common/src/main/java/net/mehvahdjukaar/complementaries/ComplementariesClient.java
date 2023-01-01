@@ -22,7 +22,7 @@ public class ComplementariesClient {
     }
 
     public static void setup() {
-        ClientPlatformHelper.registerRenderType(ModRegistry.HALITE_BLOCK.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.HALITE_BLOCK.get(), RenderType.cutoutMipped());
     }
 
     @EventCalled

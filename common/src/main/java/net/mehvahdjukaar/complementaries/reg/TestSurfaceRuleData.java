@@ -25,7 +25,7 @@ public class TestSurfaceRuleData
         SurfaceRules.RuleSource grassSurface = SurfaceRules.sequence(SurfaceRules.ifTrue(isAtOrAboveWaterLevel, COARSE_DIRT), DIRT);
 
         return SurfaceRules.sequence(
-                SurfaceRules.ifTrue( SurfaceRules.not(SurfaceRules.yBlockCheck(VerticalAnchor.absolute(64),0)),
+                SurfaceRules.ifTrue( SurfaceRules.not(SurfaceRules.yBlockCheck(VerticalAnchor.absolute(60),0)),
                         SurfaceRules.ifTrue(SurfaceRules.isBiome(ModWorldgen.SALT_FLATS.getHolder().unwrapKey().get()),
                         HALITE)),
               //  SurfaceRules.ifTrue( SurfaceRules.noiseCondition(Noises.SOUL_SAND_LAYER, -0.012),

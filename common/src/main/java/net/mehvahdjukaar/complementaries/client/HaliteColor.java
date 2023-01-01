@@ -7,6 +7,7 @@ import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
@@ -51,9 +52,6 @@ public class HaliteColor implements BlockColor {
             int yy = blockPos.getY();
             h = Mth.abs((float) NOISE.getValue(x * 0.3 +0* Mth.cos(yy * 0.2f), z * 0.3 + Mth.sin(yy * 0.2f), false));
 
-            if (h > 1 || h < -1) {
-                int aa = 1;
-            }
             float y = (float) (blockPos.getY() + h * 16);
             int maxColors = 50;
             var c = getHaliteColor((1 + (y / maxColors) % 1) % 1).asHSL();

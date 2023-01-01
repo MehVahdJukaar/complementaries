@@ -7,19 +7,7 @@
     },
     "axis=y": [
       {
-        "model": "complementaries:block/halite"
-      },
-      {
-        "model": "complementaries:block/halite",
-        "y": 90
-      },
-      {
-        "model": "complementaries:block/halite",
-        "y": 180
-      },
-      {
-        "model": "complementaries:block/halite",
-        "y": 270
+        "model": "complementaries:block/halite_flat"
       }
     ],
     "axis=z": {

@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": ["complementaries:salt_flats"],
+  "features": "complementaries:sodic_soil",
+  "step": "underground_decoration"
+}

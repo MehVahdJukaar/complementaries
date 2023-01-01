@@ -16,20 +16,19 @@ package net.mehvahdjukaar.complementaries.reg; /**
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import com.google.common.collect.*;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
 import terrablender.api.ParameterUtils;
 import terrablender.api.Region;
-import terrablender.core.TerraBlender;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 /***
@@ -56,37 +55,75 @@ public class VanillaParameterOverlayBuilder
      */
     public List<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> build()
     {
+        Set<Climate.ParameterPoint> standalonePoints = Sets.newHashSet(this.mappings.keySet());
+        SetMultimap<Adjacency, Climate.ParameterPoint> adjacentPoints = HashMultimap.create();
+
+        permuteMappings((a, b) ->
+        {
+            if (a.equals(b))
+                return;
+
+            for (Adjacency adjacency : Adjacency.values())
+            {
+                if (adjacency.isAdjacent(a, b))
+                {
+                    adjacentPoints.put(adjacency, a);
+                    adjacentPoints.put(adjacency, b);
+                    standalonePoints.remove(a);
+                    standalonePoints.remove(b);
+                }
+            }
+        });
+
         ImmutableList.Builder<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> outBuilder = ImmutableList.builder();
+
+        // Add the original mappings
+        outBuilder.addAll(this.mappings.entrySet().stream().map(entry -> Pair.of(entry.getKey(), entry.getValue())).toList());
+
+        // Add the standalone points
+        if (!standalonePoints.isEmpty())
+        {
+            outBuilder.addAll(standalonePoints.stream().flatMap(point -> inversePoints(List.of(point)).stream().map(inversePoint -> Pair.of(inversePoint, Region.DEFERRED_PLACEHOLDER))).toList());
+        }
+
+        // Add the adjacent points
+        for (Adjacency adjacency : adjacentPoints.keySet())
+        {
+            Set<Climate.ParameterPoint> values = adjacentPoints.get(adjacency);
+
+            if (values.isEmpty())
+                continue;
+
+            outBuilder.addAll(inversePoints(List.copyOf(values)).stream().map(point -> Pair.of(point, Region.DEFERRED_PLACEHOLDER)).toList());
+        }
+
+        return outBuilder.build();
+    }
+
+    private void permuteMappings(BiConsumer<Climate.ParameterPoint, Climate.ParameterPoint> consumer)
+    {
         var entries = this.mappings.entrySet().stream().toList();
 
         if (entries.size() == 0)
         {
-            throw new RuntimeException("At least one Climate.ParameterPoint must be added!");
+            throw new RuntimeException("Need at least one entry to permute!");
         }
         else if (entries.size() == 1)
         {
-            outBuilder.addAll(inversePoints(List.of(entries.get(0).getKey())).stream().map(point -> Pair.of(point, Region.DEFERRED_PLACEHOLDER)).toList());
+            var point = entries.get(0).getKey();
+            consumer.accept(point, point);
         }
         else
         {
-            for (int i = 0; i < entries.size() - 1; i++)
+            for (int i = 0; i < entries.size(); i++)
             {
                 Climate.ParameterPoint pointA = entries.get(i).getKey();
-                List<Climate.ParameterPoint> adjacentPoints = Lists.newArrayList(pointA);
-
-                // Find adjacent points
                 for (int j = i; j < entries.size(); j++)
                 {
-                    Climate.ParameterPoint pointB = entries.get(j).getKey();
-                    if (isAdjacent(pointA, pointB)) adjacentPoints.add(pointB);
+                    consumer.accept(pointA, entries.get(j).getKey());
                 }
-
-                outBuilder.addAll(inversePoints(adjacentPoints).stream().map(point -> Pair.of(point, Region.DEFERRED_PLACEHOLDER)).toList());
             }
         }
-
-        outBuilder.addAll(entries.stream().map(entry -> Pair.of(entry.getKey(), entry.getValue())).toList());
-        return outBuilder.build();
     }
 
     private static List<Climate.ParameterPoint> inversePoints(List<Climate.ParameterPoint> values)
@@ -152,26 +189,6 @@ public class VanillaParameterOverlayBuilder
         return out;
     }
 
-    private static boolean isAdjacent(Climate.ParameterPoint a, Climate.ParameterPoint b)
-    {
-        // Default to points being identical
-        Adjacency val = null;
-        for (var adjacency : Adjacency.values())
-        {
-            // Check if there is a difference
-            if (!adjacency.getParameter(a).equals(adjacency.getParameter(b)))
-            {
-                // Values are disconnected
-                if (val != null)
-                    return false;
-
-                val = adjacency;
-            }
-        }
-
-        return val != null;
-    }
-
     private enum Adjacency
     {
         TEMPERATURE(Climate.ParameterPoint::temperature),
@@ -181,16 +198,36 @@ public class VanillaParameterOverlayBuilder
         DEPTH(Climate.ParameterPoint::depth),
         WEIRDNESS(Climate.ParameterPoint::weirdness);
 
-        Function<Climate.ParameterPoint, Climate.Parameter> differenceGetter;
+        Function<Climate.ParameterPoint, Climate.Parameter> getter;
 
-        Adjacency(Function<Climate.ParameterPoint, Climate.Parameter> differenceGetter)
+        Adjacency(Function<Climate.ParameterPoint, Climate.Parameter> getter)
         {
-            this.differenceGetter = differenceGetter;
+            this.getter = getter;
         }
 
         public Climate.Parameter getParameter(Climate.ParameterPoint point)
         {
-            return this.differenceGetter.apply(point);
+            return this.getter.apply(point);
+        }
+
+        public boolean isAdjacent(Climate.ParameterPoint a, Climate.ParameterPoint b)
+        {
+            for (Adjacency adjacency : Adjacency.values())
+            {
+                Climate.Parameter paramA = adjacency.getParameter(a);
+                Climate.Parameter paramB = adjacency.getParameter(b);
+
+                if (adjacency == this && paramA.equals(paramB))
+                {
+                    return false;
+                }
+                else if (adjacency != this && !paramA.equals(paramB))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.complementaries.mixins;
 
 import net.mehvahdjukaar.complementaries.common.worldgen.BeardifierWithSaltProcessor;
-import net.mehvahdjukaar.complementaries.common.worldgen.SaltBeardifier;
+import net.mehvahdjukaar.complementaries.common.worldgen.SaltPostProcessor;
 import net.minecraft.world.level.levelgen.*;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,10 +15,10 @@ public abstract class BeardifierMixin implements BeardifierWithSaltProcessor {
 
     @Unique
     @Nullable
-    private SaltBeardifier saltFlatsBeardifier = null;
+    private SaltPostProcessor saltFlatsBeardifier = null;
 
     @Override
-    public void addSaltPostProcessor(SaltBeardifier saltBeardifier) {
+    public void addSaltPostProcessor(SaltPostProcessor saltBeardifier) {
         this.saltFlatsBeardifier = saltBeardifier;
     }
 
@@ -28,7 +28,7 @@ public abstract class BeardifierMixin implements BeardifierWithSaltProcessor {
     }
 
     @Override
-    public SaltBeardifier getSaltPostProcessor() {
+    public SaltPostProcessor getSaltPostProcessor() {
         return saltFlatsBeardifier;
     }
 }

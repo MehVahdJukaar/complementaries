@@ -13,7 +13,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
 import terrablender.api.Region;
 import terrablender.api.RegionType;
-import terrablender.worldgen.noise.LayeredNoiseUtil;
 
 import java.util.function.Consumer;
 
@@ -31,7 +30,7 @@ public class ModRegion extends Region {
         //map of params and their inverse
         var snowcappedParams = BiomePointParser.RELOAD_INSTANCE.getPoints();
 
-        if(false) {
+        if(true) {
             var nonInverse = snowcappedParams.values().stream().findFirst().get();
 
             var b = new VanillaParameterOverlayBuilder();

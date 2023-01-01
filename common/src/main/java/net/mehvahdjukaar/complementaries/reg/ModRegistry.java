@@ -18,6 +18,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import static net.mehvahdjukaar.complementaries.Complementaries.res;
@@ -42,9 +44,9 @@ public class ModRegistry {
             () -> new HaliteFormation(5, 8, BlockBehaviour.Properties.copy(Blocks.CALCITE)),
             CreativeModeTab.TAB_DECORATIONS);
 
-    public static final Supplier<Block> SALT_BRICKS = regWithItem("salt_brick",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.CALCITE)),
-            CreativeModeTab.TAB_DECORATIONS);
+    public static final Map<RegHelper.VariantType, Supplier<Block>> SALT_BRICKS = RegHelper.registerFullBlockSet(
+            res("salt_bricks"),
+            Blocks.CALCITE, false);
 
     public static final Supplier<Block> SALT_LAMP = regWithItem("salt_lamp",
             () -> new SaltLampBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)),
@@ -52,6 +54,10 @@ public class ModRegistry {
 
     public static final Supplier<Item> SALT_ITEM = regItem("salt",
             () -> new SaltCrystalItem(new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
+
+    public static final Supplier<Block> SODIC_SOIL = regWithItem("sodic_soil",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.COARSE_DIRT)),
+            CreativeModeTab.TAB_DECORATIONS);
 
     public static CreativeModeTab getTab(CreativeModeTab g, String regName) {
         return g;

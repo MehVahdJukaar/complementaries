@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "minecraft:block/sodic_soil"
+      "model": "complementaries:block/sodic_soil"
     }
   }
 }

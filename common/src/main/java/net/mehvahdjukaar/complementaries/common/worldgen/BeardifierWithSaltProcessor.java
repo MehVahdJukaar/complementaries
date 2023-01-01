@@ -2,7 +2,8 @@ package net.mehvahdjukaar.complementaries.common.worldgen;
 
 public interface BeardifierWithSaltProcessor {
 
-    void addSaltPostProcessor(SaltBeardifier saltBeardifier);
+    void addSaltPostProcessor(SaltPostProcessor saltBeardifier);
 
-    SaltBeardifier getSaltPostProcessor();
+    SaltPostProcessor getSaltPostProcessor();
+
 }

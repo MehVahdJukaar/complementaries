@@ -2,6 +2,7 @@ package net.mehvahdjukaar.complementaries.reg;
 
 import net.mehvahdjukaar.complementaries.Complementaries;
 import net.mehvahdjukaar.complementaries.common.worldgen.SmallSaltLakeFeature;
+import net.mehvahdjukaar.complementaries.common.worldgen.SodicSoilFeature;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.minecraft.data.BuiltinRegistries;
@@ -11,9 +12,14 @@ import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.BiomeSpecialEffects;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.placement.*;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 public class ModWorldgen {
 
@@ -58,5 +64,21 @@ public class ModWorldgen {
             BuiltinRegistries.BIOME
     );
 
+
+    public static final Supplier<Feature<SodicSoilFeature.Config>> SODIC_SOILD_FEATURE = RegHelper.registerFeature(
+            Complementaries.res("layered_blocks"), () -> new SodicSoilFeature(SodicSoilFeature.Config.CODEC));
+    public static final RegSupplier<ConfiguredFeature<SodicSoilFeature.Config, Feature<SodicSoilFeature.Config>>> SODIC_SOIL_PATCH =
+            RegHelper.registerConfiguredFeature(Complementaries.res("sodic_soil"),
+                    () -> new ConfiguredFeature<>(SODIC_SOILD_FEATURE.get(),
+                            new SodicSoilFeature.Config(120,8, 4)));
+
+    public static final RegSupplier<PlacedFeature> PLACED_SODIC_SOIL =
+            RegHelper.registerPlacedFeature(Complementaries.res("sodic_soil"),
+                    SODIC_SOIL_PATCH,
+                    () -> List.of(
+                            HeightRangePlacement.uniform(VerticalAnchor.absolute(62), VerticalAnchor.absolute(66)),
+                            CountPlacement.of(11),
+                            InSquarePlacement.spread(),
+                            BiomeFilter.biome()));
 
 }

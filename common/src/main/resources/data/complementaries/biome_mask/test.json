@@ -6,455 +6,8 @@
         {
           "parameters": {
             "erosion": [
-              -1.0,
-              0.05
-            ],
-            "depth": [
-              -1.0,
-              0.0
-            ],
-            "weirdness": [
-              -0.9333,
-              -0.4
-            ],
-            "offset": 0.0,
-            "temperature": [
-              -1.0,
-              0.2
-            ],
-            "humidity": [
-              0.1,
-              1.0
-            ],
-            "continentalness": [
-              -1.0,
-              0.3
-            ]
-          },
-          "biome": "terrablender:deferred_placeholder"
-        },
-        {
-          "parameters": {
-            "erosion": [
-              -1.0,
-              0.05
-            ],
-            "depth": [
-              -1.0,
-              0.0
-            ],
-            "weirdness": [
-              0.4,
-              0.9333
-            ],
-            "offset": 0.0,
-            "temperature": [
-              -1.0,
-              0.2
-            ],
-            "humidity": [
-              0.1,
-              1.0
-            ],
-            "continentalness": [
-              -1.0,
-              0.3
-            ]
-          },
-          "biome": "terrablender:deferred_placeholder"
-        },
-        {
-          "parameters": {
-            "erosion": [
-              -1.0,
-              0.05
-            ],
-            "depth": [
-              0.0,
-              1.0
-            ],
-            "weirdness": [
-              -0.9333,
-              -0.4
-            ],
-            "offset": 0.0,
-            "temperature": [
-              -1.0,
-              0.2
-            ],
-            "humidity": [
-              0.1,
-              1.0
-            ],
-            "continentalness": [
-              -1.0,
-              0.3
-            ]
-          },
-          "biome": "terrablender:deferred_placeholder"
-        },
-        {
-          "parameters": {
-            "erosion": [
-              -1.0,
-              0.05
-            ],
-            "depth": [
-              0.0,
-              1.0
-            ],
-            "weirdness": [
-              0.4,
-              0.9333
-            ],
-            "offset": 0.0,
-            "temperature": [
-              -1.0,
-              0.2
-            ],
-            "humidity": [
-              0.1,
-              1.0
-            ],
-            "continentalness": [
-              -1.0,
-              0.3
-            ]
-          },
-          "biome": "terrablender:deferred_placeholder"
-        },
-        {
-          "parameters": {
-            "erosion": [
-              -1.0,
-              0.05
-            ],
-            "depth": [
-              -1.0,
-              0.0
-            ],
-            "weirdness": [
-              -0.9333,
-              -0.4
-            ],
-            "offset": 0.0,
-            "temperature": [
-              -1.0,
-              0.2
-            ],
-            "humidity": [
-              0.1,
-              1.0
-            ],
-            "continentalness": [
-              -1.0,
-              0.3
-            ]
-          },
-          "biome": "terrablender:deferred_placeholder"
-        },
-        {
-          "parameters": {
-            "erosion": [
-              -1.0,
-              0.05
-            ],
-            "depth": [
-              -1.0,
-              0.0
-            ],
-            "weirdness": [
-              0.4,
-              0.9333
-            ],
-            "offset": 0.0,
-            "temperature": [
-              -1.0,
-              0.2
-            ],
-            "humidity": [
-              0.1,
-              1.0
-            ],
-            "continentalness": [
-              -1.0,
-              0.3
-            ]
-          },
-          "biome": "terrablender:deferred_placeholder"
-        },
-        {
-          "parameters": {
-            "erosion": [
-              -1.0,
-              0.05
-            ],
-            "depth": [
-              0.0,
-              1.0
-            ],
-            "weirdness": [
-              -0.9333,
-              -0.4
-            ],
-            "offset": 0.0,
-            "temperature": [
-              -1.0,
-              0.2
-            ],
-            "humidity": [
-              0.1,
-              1.0
-            ],
-            "continentalness": [
-              -1.0,
-              0.3
-            ]
-          },
-          "biome": "terrablender:deferred_placeholder"
-        },
-        {
-          "parameters": {
-            "erosion": [
-              -1.0,
-              0.05
-            ],
-            "depth": [
-              0.0,
-              1.0
-            ],
-            "weirdness": [
-              0.4,
-              0.9333
-            ],
-            "offset": 0.0,
-            "temperature": [
-              -1.0,
-              0.2
-            ],
-            "humidity": [
-              0.1,
-              1.0
-            ],
-            "continentalness": [
-              -1.0,
-              0.3
-            ]
-          },
-          "biome": "terrablender:deferred_placeholder"
-        },
-        {
-          "parameters": {
-            "erosion": [
-              -1.0,
-              0.05
-            ],
-            "depth": [
-              -1.0,
-              0.0
-            ],
-            "weirdness": [
-              -0.9333,
-              0.9333
-            ],
-            "offset": 0.0,
-            "temperature": [
-              -1.0,
-              0.2
-            ],
-            "humidity": [
-              0.1,
-              1.0
-            ],
-            "continentalness": [
-              -1.0,
-              0.3
-            ]
-          },
-          "biome": "terrablender:deferred_placeholder"
-        },
-        {
-          "parameters": {
-            "erosion": [
-              -1.0,
-              0.05
-            ],
-            "depth": [
-              0.0,
-              1.0
-            ],
-            "weirdness": [
-              -0.9333,
-              0.9333
-            ],
-            "offset": 0.0,
-            "temperature": [
-              -1.0,
-              0.2
-            ],
-            "humidity": [
-              0.1,
-              1.0
-            ],
-            "continentalness": [
-              -1.0,
-              0.3
-            ]
-          },
-          "biome": "terrablender:deferred_placeholder"
-        },
-        {
-          "parameters": {
-            "erosion": [
-              -1.0,
-              0.05
-            ],
-            "depth": [
-              -1.0,
-              1.0
-            ],
-            "weirdness": [
-              -1.0,
-              -0.4
-            ],
-            "offset": 0.0,
-            "temperature": [
-              -1.0,
-              0.2
-            ],
-            "humidity": [
-              0.1,
-              1.0
-            ],
-            "continentalness": [
-              -1.0,
-              0.3
-            ]
-          },
-          "biome": "terrablender:deferred_placeholder"
-        },
-        {
-          "parameters": {
-            "erosion": [
-              -1.0,
-              0.05
-            ],
-            "depth": [
-              -1.0,
-              1.0
-            ],
-            "weirdness": [
-              0.4,
-              0.9333
-            ],
-            "offset": 0.0,
-            "temperature": [
-              -1.0,
-              0.2
-            ],
-            "humidity": [
-              0.1,
-              1.0
-            ],
-            "continentalness": [
-              -1.0,
-              0.3
-            ]
-          },
-          "biome": "terrablender:deferred_placeholder"
-        },
-        {
-          "parameters": {
-            "erosion": [
-              -1.0,
-              0.05
-            ],
-            "depth": [
-              -1.0,
-              0.0
-            ],
-            "weirdness": [
-              -1.0,
-              0.9333
-            ],
-            "offset": 0.0,
-            "temperature": [
-              -1.0,
-              0.2
-            ],
-            "humidity": [
-              0.1,
-              1.0
-            ],
-            "continentalness": [
-              -1.0,
-              0.3
-            ]
-          },
-          "biome": "terrablender:deferred_placeholder"
-        },
-        {
-          "parameters": {
-            "erosion": [
-              -1.0,
-              0.05
-            ],
-            "depth": [
-              0.0,
-              1.0
-            ],
-            "weirdness": [
-              -1.0,
-              0.9333
-            ],
-            "offset": 0.0,
-            "temperature": [
-              -1.0,
-              0.2
-            ],
-            "humidity": [
-              0.1,
-              1.0
-            ],
-            "continentalness": [
-              -1.0,
-              0.3
-            ]
-          },
-          "biome": "terrablender:deferred_placeholder"
-        },
-        {
-          "parameters": {
-            "erosion": [
               0.05,
-              1.0
-            ],
-            "depth": 1.0,
-            "weirdness": [
-              -1.0,
-              -0.9333
-            ],
-            "offset": 0.0,
-            "temperature": [
-              0.2,
-              1.0
-            ],
-            "humidity": [
-              -1.0,
-              0.1
-            ],
-            "continentalness": [
-              0.3,
-              1.0
-            ]
-          },
-          "biome": "complementaries:salt_flats"
-        },
-        {
-          "parameters": {
-            "erosion": [
-              0.05,
-              1.0
+              0.45
             ],
             "depth": 0.0,
             "weirdness": [
@@ -463,11 +16,11 @@
             ],
             "offset": 0.0,
             "temperature": [
-              0.2,
+              0.55,
               1.0
             ],
             "humidity": [
-              -1.0,
+              -0.1,
               0.1
             ],
             "continentalness": [
@@ -481,7 +34,61 @@
           "parameters": {
             "erosion": [
               0.05,
+              0.45
+            ],
+            "depth": 1.0,
+            "weirdness": [
+              0.9333,
               1.0
+            ],
+            "offset": 0.0,
+            "temperature": [
+              0.55,
+              1.0
+            ],
+            "humidity": [
+              -0.1,
+              0.1
+            ],
+            "continentalness": [
+              0.3,
+              1.0
+            ]
+          },
+          "biome": "complementaries:salt_flats"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              0.05,
+              0.55
+            ],
+            "depth": 0.0,
+            "weirdness": [
+              0.9333,
+              1.0
+            ],
+            "offset": 0.0,
+            "temperature": [
+              0.55,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              -0.1
+            ],
+            "continentalness": [
+              0.3,
+              1.0
+            ]
+          },
+          "biome": "complementaries:salt_flats"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              0.05,
+              0.45
             ],
             "depth": 0.0,
             "weirdness": [
@@ -490,11 +97,11 @@
             ],
             "offset": 0.0,
             "temperature": [
-              0.2,
+              0.55,
               1.0
             ],
             "humidity": [
-              -1.0,
+              -0.1,
               0.1
             ],
             "continentalness": [
@@ -508,7 +115,61 @@
           "parameters": {
             "erosion": [
               0.05,
+              0.55
+            ],
+            "depth": 0.0,
+            "weirdness": [
+              -0.4,
+              0.4
+            ],
+            "offset": 0.0,
+            "temperature": [
+              0.55,
               1.0
+            ],
+            "humidity": [
+              -1.0,
+              -0.1
+            ],
+            "continentalness": [
+              0.3,
+              1.0
+            ]
+          },
+          "biome": "complementaries:salt_flats"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              0.05,
+              0.55
+            ],
+            "depth": 1.0,
+            "weirdness": [
+              0.9333,
+              1.0
+            ],
+            "offset": 0.0,
+            "temperature": [
+              0.55,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              -0.1
+            ],
+            "continentalness": [
+              0.3,
+              1.0
+            ]
+          },
+          "biome": "complementaries:salt_flats"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              0.05,
+              0.45
             ],
             "depth": 1.0,
             "weirdness": [
@@ -517,11 +178,11 @@
             ],
             "offset": 0.0,
             "temperature": [
-              0.2,
+              0.55,
               1.0
             ],
             "humidity": [
-              -1.0,
+              -0.1,
               0.1
             ],
             "continentalness": [
@@ -535,7 +196,61 @@
           "parameters": {
             "erosion": [
               0.05,
+              0.55
+            ],
+            "depth": 1.0,
+            "weirdness": [
+              -0.4,
+              0.4
+            ],
+            "offset": 0.0,
+            "temperature": [
+              0.55,
               1.0
+            ],
+            "humidity": [
+              -1.0,
+              -0.1
+            ],
+            "continentalness": [
+              0.3,
+              1.0
+            ]
+          },
+          "biome": "complementaries:salt_flats"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              0.05,
+              0.55
+            ],
+            "depth": 1.0,
+            "weirdness": [
+              -1.0,
+              -0.9333
+            ],
+            "offset": 0.0,
+            "temperature": [
+              0.55,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              -0.1
+            ],
+            "continentalness": [
+              0.3,
+              1.0
+            ]
+          },
+          "biome": "complementaries:salt_flats"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              0.05,
+              0.45
             ],
             "depth": 0.0,
             "weirdness": [
@@ -544,11 +259,11 @@
             ],
             "offset": 0.0,
             "temperature": [
-              0.2,
+              0.55,
               1.0
             ],
             "humidity": [
-              -1.0,
+              -0.1,
               0.1
             ],
             "continentalness": [
@@ -562,20 +277,47 @@
           "parameters": {
             "erosion": [
               0.05,
-              1.0
+              0.55
             ],
-            "depth": 1.0,
+            "depth": 0.0,
             "weirdness": [
-              0.9333,
-              1.0
+              -1.0,
+              -0.9333
             ],
             "offset": 0.0,
             "temperature": [
-              0.2,
+              0.55,
               1.0
             ],
             "humidity": [
               -1.0,
+              -0.1
+            ],
+            "continentalness": [
+              0.3,
+              1.0
+            ]
+          },
+          "biome": "complementaries:salt_flats"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              0.05,
+              0.45
+            ],
+            "depth": 1.0,
+            "weirdness": [
+              -1.0,
+              -0.9333
+            ],
+            "offset": 0.0,
+            "temperature": [
+              0.55,
+              1.0
+            ],
+            "humidity": [
+              -0.1,
               0.1
             ],
             "continentalness": [
@@ -584,6 +326,486 @@
             ]
           },
           "biome": "complementaries:salt_flats"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              -1.0,
+              0.05
+            ],
+            "depth": [
+              -1.0,
+              0.0
+            ],
+            "weirdness": [
+              -0.9333,
+              -0.4
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              0.55
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              0.3
+            ]
+          },
+          "biome": "terrablender:deferred_placeholder"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              -1.0,
+              0.05
+            ],
+            "depth": [
+              -1.0,
+              0.0
+            ],
+            "weirdness": [
+              0.4,
+              0.9333
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              0.55
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              0.3
+            ]
+          },
+          "biome": "terrablender:deferred_placeholder"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              -1.0,
+              0.05
+            ],
+            "depth": [
+              0.0,
+              1.0
+            ],
+            "weirdness": [
+              -0.9333,
+              -0.4
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              0.55
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              0.3
+            ]
+          },
+          "biome": "terrablender:deferred_placeholder"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              -1.0,
+              0.05
+            ],
+            "depth": [
+              0.0,
+              1.0
+            ],
+            "weirdness": [
+              0.4,
+              0.9333
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              0.55
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              0.3
+            ]
+          },
+          "biome": "terrablender:deferred_placeholder"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              0.45,
+              1.0
+            ],
+            "depth": [
+              -1.0,
+              0.0
+            ],
+            "weirdness": [
+              -0.9333,
+              -0.4
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              0.55
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              0.3
+            ]
+          },
+          "biome": "terrablender:deferred_placeholder"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              0.45,
+              1.0
+            ],
+            "depth": [
+              -1.0,
+              0.0
+            ],
+            "weirdness": [
+              0.4,
+              0.9333
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              0.55
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              0.3
+            ]
+          },
+          "biome": "terrablender:deferred_placeholder"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              0.45,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              1.0
+            ],
+            "weirdness": [
+              -0.9333,
+              -0.4
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              0.55
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              0.3
+            ]
+          },
+          "biome": "terrablender:deferred_placeholder"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              0.45,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              1.0
+            ],
+            "weirdness": [
+              0.4,
+              0.9333
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              0.55
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              0.3
+            ]
+          },
+          "biome": "terrablender:deferred_placeholder"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              -1.0,
+              0.05
+            ],
+            "depth": [
+              -1.0,
+              0.0
+            ],
+            "weirdness": [
+              -0.9333,
+              -0.4
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              0.55
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              0.3
+            ]
+          },
+          "biome": "terrablender:deferred_placeholder"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              -1.0,
+              0.05
+            ],
+            "depth": [
+              -1.0,
+              0.0
+            ],
+            "weirdness": [
+              0.4,
+              0.9333
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              0.55
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              0.3
+            ]
+          },
+          "biome": "terrablender:deferred_placeholder"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              -1.0,
+              0.05
+            ],
+            "depth": [
+              0.0,
+              1.0
+            ],
+            "weirdness": [
+              -0.9333,
+              -0.4
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              0.55
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              0.3
+            ]
+          },
+          "biome": "terrablender:deferred_placeholder"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              -1.0,
+              0.05
+            ],
+            "depth": [
+              0.0,
+              1.0
+            ],
+            "weirdness": [
+              0.4,
+              0.9333
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              0.55
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              0.3
+            ]
+          },
+          "biome": "terrablender:deferred_placeholder"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              0.45,
+              1.0
+            ],
+            "depth": [
+              -1.0,
+              0.0
+            ],
+            "weirdness": [
+              -0.9333,
+              -0.4
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              0.55
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              0.3
+            ]
+          },
+          "biome": "terrablender:deferred_placeholder"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              0.45,
+              1.0
+            ],
+            "depth": [
+              -1.0,
+              0.0
+            ],
+            "weirdness": [
+              0.4,
+              0.9333
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              0.55
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              0.3
+            ]
+          },
+          "biome": "terrablender:deferred_placeholder"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              0.45,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              1.0
+            ],
+            "weirdness": [
+              -0.9333,
+              -0.4
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              0.55
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              0.3
+            ]
+          },
+          "biome": "terrablender:deferred_placeholder"
+        },
+        {
+          "parameters": {
+            "erosion": [
+              0.45,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              1.0
+            ],
+            "weirdness": [
+              0.4,
+              0.9333
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              0.55
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              0.3
+            ]
+          },
+          "biome": "terrablender:deferred_placeholder"
         }
       ],
       "type": "minecraft:multi_noise"

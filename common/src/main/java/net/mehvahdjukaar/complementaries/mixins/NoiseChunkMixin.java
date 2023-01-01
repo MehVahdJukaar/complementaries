@@ -2,7 +2,7 @@ package net.mehvahdjukaar.complementaries.mixins;
 
 import net.mehvahdjukaar.complementaries.common.worldgen.BeardifierWithSaltProcessor;
 import net.mehvahdjukaar.complementaries.common.worldgen.NC;
-import net.mehvahdjukaar.complementaries.common.worldgen.SaltBeardifier;
+import net.mehvahdjukaar.complementaries.common.worldgen.SaltPostProcessor;
 import net.mehvahdjukaar.complementaries.common.worldgen.Saltifer;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Climate;
@@ -66,7 +66,7 @@ public abstract class NoiseChunkMixin implements NC {
         //Saltifer saltifer = new Saltifer(chunk, chunkPos, noiseRouter, positionalRandomFactory, minY, height, globalFluidPicker);
         // this.setSaltifer(saltifer);
         if (this.beardifier instanceof BeardifierWithSaltProcessor ba) {
-            ba.addSaltPostProcessor(new SaltBeardifier(chunk, chunkPos, noiseRouter, positionalRandomFactory));
+            ba.addSaltPostProcessor(new SaltPostProcessor(chunk, chunkPos, noiseRouter, positionalRandomFactory));
         }
         return chunk;
     }
